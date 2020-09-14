@@ -16,10 +16,47 @@ function HandleHand(hand){
     }
 }
 
+function HandleBone(bone){
+    //console.log(bone);
+    var bone_start = bone.prevJoint;
+    //console.log(bone_start)
+    var x = bone_start[0];
+    var y = bone_start[1]; 
+    var z = bone_start[2]; //- window.innerHeight
+
+
+    if(x<rawXMin){
+        rawXMin = x
+        console.log(rawXMin)
+    }
+    if(x>rawXMax){
+        rawXMax = x
+        console.log(rawXMax)
+    }
+    if(y<rawYMin){
+        rawYMin = y
+        console.log(rawYMin)
+    }
+    if(y>rawYMax){
+        rawYMax = y
+        console.log(rawYMax)
+    }
+
+    x = (((x-rawXMin)*(window.innerWidth-0))/(rawXMax-rawXMin))+0
+    y = (((y-rawYMin)*(window.innerHeight-0))/(rawYMax-rawYMin))+0
+
+    circle(x,window.innerHeight-y,50);
+}
+
 function HandleFinger(finger){
+    for (var i = 0;i<finger.bones.length;i++)
+    {
+        HandleBone(finger.bones[i]);
+    }
+    
     //if(finger.type == 1)
     //{
-        tipPosition = finger.tipPosition
+       /* tipPosition = finger.tipPosition
         console.log(tipPosition);
         var x = tipPosition[0];
         var y = tipPosition[1]; 
@@ -47,6 +84,7 @@ function HandleFinger(finger){
         y = (((y-rawYMin)*(window.innerHeight-0))/(rawYMax-rawYMin))+0
 
         circle(x,window.innerHeight-y,50);
+        */
     //}
 }
 
