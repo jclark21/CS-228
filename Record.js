@@ -69,7 +69,8 @@ function HandleBone(bone,weight)
     [xt,yt] = TransformCoordinates(xt,yt);
 
     strokeWeight(10-(2*weight));
-    stroke((4-weight)*60,(4-weight)*60,(4-weight)*60);
+    color_shade = (4-weight)*50;
+    stroke(color(0,color_shade,0));
     line(xb,window.innerHeight-yb,xt,window.innerHeight-yt);
 }
 
