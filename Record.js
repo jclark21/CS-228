@@ -13,7 +13,7 @@ function HandleHand(hand)
         {
             for (var j = 0;j<fingers.length;j++)
             {
-                HandleBone(fingers[j].bones[i],i)
+                HandleBone(fingers[j].bones[i],i,j)
             }
         }
 }
@@ -57,7 +57,7 @@ function TransformCoordinates(x,y){
     y = (((y-rawYMin)*(window.innerHeight-0))/(rawYMax-rawYMin))+0;
     return [x,y];
 }
-function HandleBone(bone,weight)
+function HandleBone(bone,weight,fingerIndex)
 {
     var bone_base = bone.prevJoint;
     var xb = bone_base[0];
@@ -70,6 +70,16 @@ function HandleBone(bone,weight)
     var yt = bone_tip[1];
     var zt = bone_tip[2];
     [xt,yt] = TransformCoordinates(xt,yt);
+
+    coord_sum = xb+yb+zb+xt+yt+zt
+    
+    oneFrameOfData.set(fingerIndex,weight,0,xb)
+    oneFrameOfData.set(fingerIndex,weight,1,yb)
+    oneFrameOfData.set(fingerIndex,weight,2,zb)
+    oneFrameOfData.set(fingerIndex,weight,3,xt)
+    oneFrameOfData.set(fingerIndex,weight,4,yt)
+    oneFrameOfData.set(fingerIndex,weight,5,zt)
+
 
     strokeWeight(10-(2*weight));
     color_shade = (4-weight)*50;
@@ -88,10 +98,13 @@ function RecordData()
     if(previousNumHands == 2 && currentNumHands == 1)
     {
         background('#222222')
+        console.log(oneFrameOfData.toString());
     }
     
 }
 
+
+var oneFrameOfData = nj.zeros([5,4,6]);
 
 var controllerOptions = {};
 var x = window.innerWidth/2;
