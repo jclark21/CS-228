@@ -82,9 +82,14 @@ var rawXMax = 0.0001;
 var rawYMin = 1000;
 var rawYMax = 0.0001;
 
+var previousNumHands = 0;
+var currentNumHands = 0;
+
 Leap.loop(controllerOptions, function(frame)
 {
+    currentNumHands = frame.hands.length
     clear();
     HandleFrame(frame);
+    previousNumHands = currentNumHands
 }
 );
