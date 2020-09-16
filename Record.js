@@ -1,11 +1,13 @@
 function HandleFrame(frame){
-    if(frame.hands.length==1)
+    if(frame.hands.length>=1)
     {
+     numHands = frame.hands.length
      hand = frame.hands[0];
      HandleHand(hand)
     }
 }
-function HandleHand(hand){
+function HandleHand(hand)
+{
     fingers  = hand.fingers;
     for (var i = 3;i>-1;i--)
         {
@@ -14,6 +16,7 @@ function HandleHand(hand){
                 HandleBone(fingers[j].bones[i],i)
             }
         }
+}
     /*
     for (var i = 0;i<fingers.length;i++)
     {
@@ -25,13 +28,13 @@ function HandleHand(hand){
         //HandleFinger(fingers[i]);
     }
     */
-}
-function HandleFinger(finger){
+
+/* function HandleFinger(finger){
     for (var i = 0;i<finger.bones.length;i++)
     {
         HandleBone(finger.bones[i],i);
     }
-}
+} */
 function TransformCoordinates(x,y){
     if(x<rawXMin){
         rawXMin = x
@@ -70,7 +73,14 @@ function HandleBone(bone,weight)
 
     strokeWeight(10-(2*weight));
     color_shade = (4-weight)*50;
-    stroke(color(0,color_shade,0));
+    if(currentNumHands == 1)
+    {
+        stroke(color(0,color_shade,0));
+    }
+    else if (currentNumHands == 2)
+    {
+        stroke(color(color_shade,0,0));
+    }
     line(xb,window.innerHeight-yb,xt,window.innerHeight-yt);
 }
 
