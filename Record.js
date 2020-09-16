@@ -83,6 +83,14 @@ function HandleBone(bone,weight)
     }
     line(xb,window.innerHeight-yb,xt,window.innerHeight-yt);
 }
+function RecordData()
+{
+    if(previousNumHands == 2 && currentNumHands == 1)
+    {
+        background('#222222')
+    }
+    
+}
 
 
 var controllerOptions = {};
@@ -101,6 +109,7 @@ Leap.loop(controllerOptions, function(frame)
     currentNumHands = frame.hands.length
     clear();
     HandleFrame(frame);
+    RecordData();
     previousNumHands = currentNumHands
 }
 );
