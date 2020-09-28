@@ -1,3 +1,5 @@
+const knnClassifier = ml5.KNNClassifier();
+
 var irisData = nj.array([[5.1, 3.5, 1.4, 0.2, 0. ],
     [4.9, 3. , 1.4, 0.2, 0. ],
     [4.7, 3.2, 1.3, 0.2, 0. ],
@@ -157,19 +159,38 @@ var numFeatures = irisData.shape[1]-1;
 
 function Train()
 {
+    for(i = 0;i<numSamples;i = i+2)
+    {
+        var currentFeatures = irisData.pick(i).slice([numFeatures]);
+        var currentLabel = irisData.pick(i).get(-1);
+        console.log(i,irisData.pick(i),currentFeatures.toString(),currentLabel);
+        knnClassifier.addExample(currentFeatures.tolist(),currentLabel);
+    }
     console.log('I am being trained');
     trainingCompleted = true;
 }
 
 function Test()
 {
+    for(i = 1;i<numSamples;i = i+2)
+    {
+        var currentFeatures = irisData.pick(i).slice([numFeatures]);
+        var currentLabel = irisData.pick(i).get(-1);
+        predictedLabel = knnClassifier.classify(currentFeatures.tolist(),GotResults);
+        //console.log(i,currentFeatures.toString(),currentLabel,predictedLabel)
+    }
     console.log('I am testing');
+}
+
+function GotResults(err,result)
+{
+    console.log(parseInt(result.label));
 }
 
 function draw()
 {
-    console.log(numSamples,numFeatures)
-    console.log(irisData.toString())
+    //console.log(numSamples,numFeatures)
+    //console.log(irisData.toString())
     clear();
     if(trainingCompleted == false)
     {
