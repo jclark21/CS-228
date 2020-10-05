@@ -16,8 +16,13 @@ function Train()
         //console.log(features.reshape(120,1).toString());
         features = features.flatten();
         //console.log(features.toString());
-        label = 0
-        knnClassifier.addExample(features.tolist(),label)
+        //label_0 = 0
+        knnClassifier.addExample(features.tolist(),0)
+
+        features = train1.pick(null,null,null,i);
+        features = features.flatten();
+        knnClassifier.addExample(features.tolist(),1)
+
     }
     
     trainingCompleted = true;
