@@ -32,7 +32,7 @@ function Test()
         features = test.pick(null,null,null,j);
         features = features.flatten();
         predictedLabel = knnClassifier.classify(features.tolist(),GotResults);
-        console.log(j,features.toString(),0,predictedLabel)
+        //console.log(j,features.toString(),0,predictedLabel)
 
     }
 
@@ -40,9 +40,9 @@ function Test()
 function GotResults(err,result)
 {
     predictedClassLabels.set(testingSampleIndex,parseInt(result.label))
-    //console.log(testingSampleIndex,parseInt(result.label));
+    console.log(testingSampleIndex,parseInt(result.label));
     testingSampleIndex = testingSampleIndex+1;
-    if(testingSampleIndex>test.shape[3])
+    if(testingSampleIndex>=test.shape[3])
     {
         testingSampleIndex = 0;
     }
