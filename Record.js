@@ -3,17 +3,18 @@ function HandleFrame(frame){
     {
      numHands = frame.hands.length
      hand = frame.hands[0];
-     HandleHand(hand)
+     var interactionBox = frame.interactionBox;
+     HandleHand(hand,interactionBox)
     }
 }
-function HandleHand(hand)
+function HandleHand(hand,interactionBox)
 {
     fingers  = hand.fingers;
     for (var i = 3;i>-1;i--)
         {
             for (var j = 0;j<fingers.length;j++)
             {
-                HandleBone(fingers[j].bones[i],i,j)
+                HandleBone(fingers[j].bones[i],i,j,interactionBox)
             }
         }
 }
@@ -35,7 +36,7 @@ function HandleHand(hand)
         HandleBone(finger.bones[i],i);
     }
 } */
-function TransformCoordinates(x,y){
+/* function TransformCoordinates(x,y){
     if(x<rawXMin){
         rawXMin = x
         //console.log(rawXMin)
@@ -56,29 +57,41 @@ function TransformCoordinates(x,y){
     x = (((x-rawXMin)*(window.innerWidth-0))/(rawXMax-rawXMin))+0;
     y = (((y-rawYMin)*(window.innerHeight-0))/(rawYMax-rawYMin))+0;
     return [x,y];
-}
-function HandleBone(bone,weight,fingerIndex)
+} */
+function HandleBone(bone,weight,fingerIndex,interactionBox)
 {
-    var bone_base = bone.prevJoint;
-    var xb = bone_base[0];
-    var yb = bone_base[1]; 
-    var zb = bone_base[2]; 
-    [xb,yb] = TransformCoordinates(xb,yb);
-    var bone_tip = bone.nextJoint;
-
-    var xt = bone_tip[0];
-    var yt = bone_tip[1];
-    var zt = bone_tip[2];
-    [xt,yt] = TransformCoordinates(xt,yt);
-
-    coord_sum = xb+yb+zb+xt+yt+zt
+    normalizedPrevJoint = interactionBox.normalizePoint(bone.prevJoint,true)
+    //console.log('Normalized Point',normalizedPrevJoint)
+    normalizedNextJoint = interactionBox.normalizePoint(bone.nextJoint,true)
     
-    oneFrameOfData.set(fingerIndex,weight,0,xb)
-    oneFrameOfData.set(fingerIndex,weight,1,yb)
-    oneFrameOfData.set(fingerIndex,weight,2,zb)
-    oneFrameOfData.set(fingerIndex,weight,3,xt)
-    oneFrameOfData.set(fingerIndex,weight,4,yt)
-    oneFrameOfData.set(fingerIndex,weight,5,zt)
+    oneFrameOfData.set(fingerIndex,weight,0,normalizedPrevJoint[0])
+    oneFrameOfData.set(fingerIndex,weight,1,normalizedPrevJoint[1])
+    oneFrameOfData.set(fingerIndex,weight,2,normalizedPrevJoint[2])
+    oneFrameOfData.set(fingerIndex,weight,3,normalizedNextJoint[0])
+    oneFrameOfData.set(fingerIndex,weight,4,normalizedNextJoint[1])
+    oneFrameOfData.set(fingerIndex,weight,5,normalizedNextJoint[2])
+
+    var xb = window.innerWidth * normalizedPrevJoint[0];
+    var yb = window.innerHeight * (1 - normalizedPrevJoint[1]);
+
+    var xt = window.innerWidth * normalizedNextJoint[0];
+    var yt = window.innerHeight * (1 - normalizedNextJoint[1]);
+
+    
+    //var bone_base = bone.prevJoint;
+    //var xb = bone_base[0];
+    //var yb = bone_base[1]; 
+    //var zb = bone_base[2]; 
+    //[xb,yb] = TransformCoordinates(xb,yb);
+    //var bone_tip = bone.nextJoint;
+
+    //var xt = bone_tip[0];
+    //var yt = bone_tip[1];
+    //var zt = bone_tip[2];
+    //[xt,yt] = TransformCoordinates(xt,yt);
+
+    //coord_sum = xb+yb+zb+xt+yt+zt
+    
 
 
     strokeWeight(10-(2*weight));
@@ -91,7 +104,8 @@ function HandleBone(bone,weight,fingerIndex)
     {
         stroke(color(color_shade,0,0));
     }
-    line(xb,window.innerHeight-yb,xt,window.innerHeight-yt);
+    //line(xb,window.innerHeight-yb,xt,window.innerHeight-yt);
+    line(xb,yb,xt,yt);
 }
 function RecordData()
 {
@@ -109,10 +123,10 @@ var oneFrameOfData = nj.zeros([5,4,6]);
 var controllerOptions = {};
 var x = window.innerWidth/2;
 var y = window.innerHeight/2;
-var rawXMin = 1000;
-var rawXMax = 0.0001;
-var rawYMin = 1000;
-var rawYMax = 0.0001;
+//var rawXMin = 1000;
+//var rawXMax = 0.0001;
+//var rawYMin = 1000;
+//var rawYMax = 0.0001;
 
 var previousNumHands = 0;
 var currentNumHands = 0;
