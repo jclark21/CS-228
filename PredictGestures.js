@@ -36,13 +36,6 @@ function Train()
 
 function CenterXData()
 {
-
-}
-
-
-
-function CenterData()
-{
     xValues = framesOfData.slice([],[],[0,6,3]);
     currentMean = xValues.mean();
     //console.log(currentMean);
@@ -63,6 +56,64 @@ function CenterData()
     xValues = framesOfData.slice([],[],[0,6,3]);
     currentMean = xValues.mean();
     //console.log(currentMean);
+}
+
+function CenterYData()
+{
+    yValues = framesOfData.slice([],[],[1,6,3]);
+    currentMean = yValues.mean();
+    //console.log(currentMean);
+    horizontalShift = 0.5 - currentMean;
+    for(r = 0;r<framesOfData.shape[0];r++)
+    {
+        for(c=0;c<framesOfData.shape[1];c++)
+        {
+            currentY = framesOfData.get(r,c,1);
+            shiftedY = currentY + horizontalShift;
+            framesOfData.set(r,c,1, shiftedY);
+
+            currentY = framesOfData.get(r,c,4);
+            shiftedY = currentY + horizontalShift;
+            framesOfData.set(r,c,4, shiftedY);
+        }
+    }
+    yValues = framesOfData.slice([],[],[1,6,3]);
+    currentMean = yValues.mean();
+    //console.log(currentMean);
+
+
+}
+
+function CenterZData()
+{
+    zValues = framesOfData.slice([],[],[2,6,3]);
+    currentMean = zValues.mean();
+    //console.log(currentMean);
+    horizontalShift = 0.5 - currentMean;
+    for(r = 0;r<framesOfData.shape[0];r++)
+    {
+        for(c=0;c<framesOfData.shape[1];c++)
+        {
+            currentZ = framesOfData.get(r,c,2);
+            shiftedZ = currentZ + horizontalShift;
+            framesOfData.set(r,c,2, shiftedZ);
+
+            currentZ = framesOfData.get(r,c,5);
+            shiftedZ = currentZ + horizontalShift;
+            framesOfData.set(r,c,5, shiftedZ);
+        }
+    }
+    zValues = framesOfData.slice([],[],[2,6,3]);
+    currentMean = zValues.mean();
+    //console.log(currentMean);
+
+}
+
+function CenterData()
+{
+    CenterXData()
+    CenterYData()
+    CenterZData()
 }
 
 
