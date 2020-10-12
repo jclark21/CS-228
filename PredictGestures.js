@@ -1,10 +1,12 @@
 const knnClassifier = ml5.KNNClassifier();
-var testingSampleIndex = 0;
+//var testingSampleIndex = 0;
 var controllerOptions = {};
 var trainingCompleted = false;
-var numSamples = test.shape[3];
+var numSamples = 100;//test.shape[3];
 //var numFeatures = irisData.shape[1]-1;
 var predictedClassLabels = nj.zeros(numSamples)
+var framesOfData = nj.zeros([5,4,6]);
+
 
 
 function Train()
@@ -32,61 +34,66 @@ function Train()
 
 function Test()
 {
-    for(j=0;j<test.shape[3];j++)
-    {
-        features = test.pick(null,null,null,j);
+    //for(j=0;j<test.shape[3];j++)
+    //{
+        features = framesOfData.pick(null,null,null);
         features = features.flatten();
         predictedLabel = knnClassifier.classify(features.tolist(),GotResults);
         //console.log(j,features.toString(),0,predictedLabel)
 
-    }
+    //}
 
 }
 function GotResults(err,result)
 {
-    predictedClassLabels.set(testingSampleIndex,parseInt(result.label))
-    console.log(testingSampleIndex,parseInt(result.label));
-    testingSampleIndex = testingSampleIndex+1;
-    if(testingSampleIndex>=test.shape[3])
-    {
-        testingSampleIndex = 0;
-    }
+    //predictedClassLabels.set(testingSampleIndex,parseInt(result.label))
+    predictedClassLabels.set(parseInt(result.label))
+    //console.log(testingSampleIndex,parseInt(result.label));
+    console.log(parseInt(result.label));
+    //testingSampleIndex = testingSampleIndex+1;
+    //if(testingSampleIndex>=numSamples)
+    //{
+    //    testingSampleIndex = 0;
+    //}
 }
 
 
-function HandleFrame(frame){
+function HandleFrame(frame,Test){
     if(frame.hands.length>=1)
     {
      numHands = frame.hands.length
      hand = frame.hands[0];
      var interactionBox = frame.interactionBox;
-     HandleHand(hand,interactionBox)
+     HandleHand(hand,interactionBox,Test)
     }
 }
-function HandleHand(hand,interactionBox)
+function HandleHand(hand,interactionBox,Test)
 {
     fingers  = hand.fingers;
     for (var i = 3;i>-1;i--)
         {
             for (var j = 0;j<fingers.length;j++)
             {
-                HandleBone(fingers[j].bones[i],i,j,interactionBox)
+                HandleBone(fingers[j].bones[i],i,j,interactionBox,Test)
             }
         }
 }
-function HandleBone(bone,weight,fingerIndex,interactionBox)
+function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
 {
     normalizedPrevJoint = interactionBox.normalizePoint(bone.prevJoint,true)
     normalizedNextJoint = interactionBox.normalizePoint(bone.nextJoint,true)
     
-    /*
-    framesOfData.set(fingerIndex,weight,0,currentSamples,normalizedPrevJoint[0])
-    framesOfData.set(fingerIndex,weight,1,currentSamples,normalizedPrevJoint[1])
-    framesOfData.set(fingerIndex,weight,2,currentSamples,normalizedPrevJoint[2])
-    framesOfData.set(fingerIndex,weight,3,currentSamples,normalizedNextJoint[0])
-    framesOfData.set(fingerIndex,weight,4,currentSamples,normalizedNextJoint[1])
-    framesOfData.set(fingerIndex,weight,5,currentSamples,normalizedNextJoint[2])
-    */
+    
+    framesOfData.set(fingerIndex,weight,0,normalizedPrevJoint[0])
+    framesOfData.set(fingerIndex,weight,1,normalizedPrevJoint[1])
+    framesOfData.set(fingerIndex,weight,2,normalizedPrevJoint[2])
+    framesOfData.set(fingerIndex,weight,3,normalizedNextJoint[0])
+    framesOfData.set(fingerIndex,weight,4,normalizedNextJoint[1])
+    framesOfData.set(fingerIndex,weight,5,normalizedNextJoint[2])
+    
+    //console.log(framesOfData.toString());
+    Test()
+
     var xb = window.innerWidth * normalizedPrevJoint[0];
     var yb = window.innerHeight * (1 - normalizedPrevJoint[1]);
     var xt = window.innerWidth * normalizedNextJoint[0];
@@ -112,13 +119,14 @@ function HandleBone(bone,weight,fingerIndex,interactionBox)
 Leap.loop(controllerOptions, function(frame){
     //console.log(numSamples,numFeatures)
     //console.log(irisData.toString())
-    currentNumHands = frame.hands.length
+    currentNumHands = frame.hands.length;
     clear();
     if(trainingCompleted == false)
     {
         Train();
     }
-    HandleFrame(frame);
-    Test();
-    previousNumHands = currentNumHands   
+    HandleFrame(frame,Test);
+    //console.log(framesOfData.toString());
+    //Test();
+    previousNumHands = currentNumHands;   
 });
