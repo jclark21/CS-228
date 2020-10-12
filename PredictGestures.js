@@ -33,11 +33,46 @@ function Train()
     //console.log(test.toString())
 }
 
+
+function CenterXData()
+{
+
+}
+
+
+
+function CenterData()
+{
+    xValues = framesOfData.slice([],[],[0,6,3]);
+    currentMean = xValues.mean();
+    //console.log(currentMean);
+    horizontalShift = 0.5 - currentMean
+    for(r = 0;r<framesOfData.shape[0];r++)
+    {
+        for(c=0;c<framesOfData.shape[1];c++)
+        {
+            currentX = framesOfData.get(r,c,0);
+            shiftedX = currentX + horizontalShift;
+            framesOfData.set(r,c,0, shiftedX);
+
+            currentX = framesOfData.get(r,c,3);
+            shiftedX = currentX + horizontalShift;
+            framesOfData.set(r,c,3, shiftedX);
+        }
+    }
+    xValues = framesOfData.slice([],[],[0,6,3]);
+    currentMean = xValues.mean();
+    //console.log(currentMean);
+}
+
+
+
 function Test()
 {
     //for(j=0;j<test.shape[3];j++)
     //{
         features = framesOfData.pick(null,null,null);
+        CenterData()
         features = features.flatten();
         predictedLabel = knnClassifier.classify(features.tolist(),GotResults);
         //console.log(j,features.toString(),0,predictedLabel)
@@ -52,7 +87,7 @@ function GotResults(err,result)
     numPredictions += 1;
     meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == 8))/numPredictions
     //console.log(testingSampleIndex,parseInt(result.label));
-    console.log(numPredictions,meanPredictionAcc,parseInt(result.label))
+    //console.log(numPredictions,meanPredictionAcc,parseInt(result.label))
     
     //console.log(parseInt(result.label));
     
