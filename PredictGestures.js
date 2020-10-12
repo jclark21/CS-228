@@ -6,7 +6,8 @@ var numSamples = 100;//test.shape[3];
 //var numFeatures = irisData.shape[1]-1;
 var predictedClassLabels = nj.zeros(numSamples)
 var framesOfData = nj.zeros([5,4,6]);
-
+var numPredictions = 0;
+var meanPredictionAcc = 0;
 
 
 function Train()
@@ -48,8 +49,14 @@ function GotResults(err,result)
 {
     //predictedClassLabels.set(testingSampleIndex,parseInt(result.label))
     predictedClassLabels.set(parseInt(result.label))
+    numPredictions += 1;
+    meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == 8))/numPredictions
     //console.log(testingSampleIndex,parseInt(result.label));
-    console.log(parseInt(result.label));
+    console.log(numPredictions,meanPredictionAcc,parseInt(result.label))
+    
+    //console.log(parseInt(result.label));
+    
+    
     //testingSampleIndex = testingSampleIndex+1;
     //if(testingSampleIndex>=numSamples)
     //{
