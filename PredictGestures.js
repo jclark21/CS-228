@@ -14,18 +14,46 @@ function Train()
 {
     for(i=0;i<train8.shape[3];i++)
     {
-        //console.log( train8.pick(null,null,null,i).toString() );
         features = train8.pick(null,null,null,i);
-        //console.log(features.reshape(120,1).toString());
         features = features.flatten();
-        //console.log(features.toString());
-        //label_0 = 0
         knnClassifier.addExample(features.tolist(),8)
 
         features = train9.pick(null,null,null,i);
         features = features.flatten();
         knnClassifier.addExample(features.tolist(),9)
+        /*
+        features = train0.pick(null,null,null,i);
+        features = features.flatten();
+        knnClassifier.addExample(features.tolist(),0)
 
+        features = train1.pick(null,null,null,i);
+        features = features.flatten();
+        knnClassifier.addExample(features.tolist(),1)
+
+        features = train2.pick(null,null,null,i);
+        features = features.flatten();
+        knnClassifier.addExample(features.tolist(),2)
+
+        features = train3.pick(null,null,null,i);
+        features = features.flatten();
+        knnClassifier.addExample(features.tolist(),3)
+
+        features = train4.pick(null,null,null,i);
+        features = features.flatten();
+        knnClassifier.addExample(features.tolist(),4)
+
+        features = train5.pick(null,null,null,i);
+        features = features.flatten();
+        knnClassifier.addExample(features.tolist(),5)
+        
+        features = train6.pick(null,null,null,i);
+        features = features.flatten();
+        knnClassifier.addExample(features.tolist(),6)
+        */
+
+       features = train7.pick(null,null,null,i);
+       features = features.flatten();
+       knnClassifier.addExample(features.tolist(),7)
     }
     
     trainingCompleted = true;
@@ -136,9 +164,9 @@ function GotResults(err,result)
     //predictedClassLabels.set(testingSampleIndex,parseInt(result.label))
     predictedClassLabels.set(parseInt(result.label))
     numPredictions += 1;
-    meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == 8))/numPredictions
+    meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == 7))/numPredictions
     //console.log(testingSampleIndex,parseInt(result.label));
-    //console.log(numPredictions,meanPredictionAcc,parseInt(result.label))
+    console.log(numPredictions,meanPredictionAcc,parseInt(result.label))
     
     //console.log(parseInt(result.label));
     
