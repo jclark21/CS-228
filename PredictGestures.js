@@ -14,48 +14,109 @@ function Train()
 {
     for(i=0;i<train8.shape[3];i++)
     {
-        features = train8.pick(null,null,null,i);
-        features = features.flatten();
-        knnClassifier.addExample(features.tolist(),8)
+        //////////////////////////////////////////
+        // TRAINING FOR 0 DIGIT //
+        knnClassifier.addExample(train0.pick(null,null,null,i).flatten().tolist(),0)
+        knnClassifier.addExample(train0Allison.pick(null,null,null,i).flatten().tolist(),0)
+        //////////////////////////////////////////
 
-        features = train9.pick(null,null,null,i);
-        features = features.flatten();
-        knnClassifier.addExample(features.tolist(),9)
-        /*
-        features = train0.pick(null,null,null,i);
-        features = features.flatten();
-        knnClassifier.addExample(features.tolist(),0)
+        //////////////////////////////////////////
+        // TRAINING FOR 1 DIGIT
+        knnClassifier.addExample(train1.pick(null,null,null,i).flatten().tolist(),1)
+        knnClassifier.addExample(train1Allison.pick(null,null,null,i).flatten().tolist(),1)
+        knnClassifier.addExample(train1Bongard.pick(null,null,null,i).flatten().tolist(),1)
+        knnClassifier.addExample(train1Li.pick(null,null,null,i).flatten().tolist(),1)
+        knnClassifier.addExample(train1McLaughlin.pick(null,null,null,i).flatten().tolist(),1)
+        knnClassifier.addExample(train1Wolley.pick(null,null,null,i).flatten().tolist(),1)
 
-        features = train1.pick(null,null,null,i);
-        features = features.flatten();
-        knnClassifier.addExample(features.tolist(),1)
+        //////////////////////////////////////////
 
-        features = train2.pick(null,null,null,i);
-        features = features.flatten();
-        knnClassifier.addExample(features.tolist(),2)
+        //////////////////////////////////////////
+        // TRAINING FOR 2 DIGIT
+        knnClassifier.addExample(train2.pick(null,null,null,i).flatten().tolist(),2)
+        knnClassifier.addExample(train2Downs.pick(null,null,null,i).flatten().tolist(),2)
+        knnClassifier.addExample(train2Jimmo.pick(null,null,null,i).flatten().tolist(),2)
+        //knnClassifier.addExample(train2Jing.pick(null,null,null,i).flatten().tolist(),2)
+        //knnClassifier.addExample(train2Liu.pick(null,null,null,i).flatten().tolist(),2)
+        //knnClassifier.addExample(train2Neff.pick(null,null,null,i).flatten().tolist(),2)
+        //////////////////////////////////////////
 
-        features = train3.pick(null,null,null,i);
-        features = features.flatten();
-        knnClassifier.addExample(features.tolist(),3)
+        //////////////////////////////////////////
+        // TRAINING FOR DIGIT 3 //
+        knnClassifier.addExample(train3.pick(null,null,null,i).flatten().tolist(),3)
+        knnClassifier.addExample(train3Beattie.pick(null,null,null,i).flatten().tolist(),3)
+        knnClassifier.addExample(train3Downs.pick(null,null,null,i).flatten().tolist(),3)
+        knnClassifier.addExample(train3Li.pick(null,null,null,i).flatten().tolist(),3)
+        knnClassifier.addExample(train3Luksevish.pick(null,null,null,i).flatten().tolist(),3)
+        knnClassifier.addExample(train3Riofrio.pick(null,null,null,i).flatten().tolist(),3)
+        //////////////////////////////////////////
 
-        features = train4.pick(null,null,null,i);
-        features = features.flatten();
-        knnClassifier.addExample(features.tolist(),4)
+        //////////////////////////////////////////
+        // TRAINING FOR DIGIT 4 //
+        knnClassifier.addExample(train4.pick(null,null,null,i).flatten().tolist(),4)
+        knnClassifier.addExample(train4Beattie.pick(null,null,null,i).flatten().tolist(),4)
+        knnClassifier.addExample(train4Bertschinger.pick(null,null,null,i).flatten().tolist(),4)
+        knnClassifier.addExample(train4Faucher.pick(null,null,null,i).flatten().tolist(),4)
+        knnClassifier.addExample(train4Kiely.pick(null,null,null,i).flatten().tolist(),4)
+        knnClassifier.addExample(train4Liu.pick(null,null,null,i).flatten().tolist(),4)
+        //////////////////////////////////////////
 
-        features = train5.pick(null,null,null,i);
-        features = features.flatten();
-        knnClassifier.addExample(features.tolist(),5)
-        
-        features = train6.pick(null,null,null,i);
-        features = features.flatten();
-        knnClassifier.addExample(features.tolist(),6)
-        */
+        //////////////////////////////////////////
+        // TRAINING FOR DIGIT 5 //
+        knnClassifier.addExample(train5.pick(null,null,null,i).flatten().tolist(),5)
+        knnClassifier.addExample(train5Bertschinger.pick(null,null,null,i).flatten().tolist(),5)
+        knnClassifier.addExample(train5Blewett.pick(null,null,null,i).flatten().tolist(),5)
+        knnClassifier.addExample(train5Faucher.pick(null,null,null,i).flatten().tolist(),5)
+        knnClassifier.addExample(train5Fekert.pick(null,null,null,i).flatten().tolist(),5)
+        knnClassifier.addExample(train5Kiely.pick(null,null,null,i).flatten().tolist(),5)
+        //////////////////////////////////////////
 
-       features = train7.pick(null,null,null,i);
-       features = features.flatten();
-       knnClassifier.addExample(features.tolist(),7)
+        //////////////////////////////////////////
+        // TRAINING FOR DIGIT 6 //
+        knnClassifier.addExample(train6.pick(null,null,null,i).flatten().tolist(),6)
+        knnClassifier.addExample(train6Fekert.pick(null,null,null,i).flatten().tolist(),6)
+        knnClassifier.addExample(train6Fisher.pick(null,null,null,i).flatten().tolist(),6)
+        knnClassifier.addExample(train6Koretsky.pick(null,null,null,i).flatten().tolist(),6)
+        knnClassifier.addExample(train6Laquerre.pick(null,null,null,i).flatten().tolist(),6)
+        knnClassifier.addExample(train6Makovsky.pick(null,null,null,i).flatten().tolist(),6)
+
+        //////////////////////////////////////////
+
+        //////////////////////////////////////////
+        // TRAINING FOR DIGIT 7
+        knnClassifier.addExample(train7.pick(null,null,null,i).flatten().tolist(),7)
+        knnClassifier.addExample(train7Fisher.pick(null,null,null,i).flatten().tolist(),7)
+        knnClassifier.addExample(train7Laquerre.pick(null,null,null,i).flatten().tolist(),7)
+        knnClassifier.addExample(train7Manian.pick(null,null,null,i).flatten().tolist(),7)
+        knnClassifier.addExample(train7Pooprasert.pick(null,null,null,i).flatten().tolist(),7)
+        knnClassifier.addExample(train7Vega.pick(null,null,null,i).flatten().tolist(),7)
+
+        //////////////////////////////////////////
+
+        //////////////////////////////////////////
+        // TRAINING FOR DIGIT 8
+        knnClassifier.addExample(train8.pick(null,null,null,i).flatten().tolist(),8)
+        knnClassifier.addExample(train8Bongard.pick(null,null,null,i).flatten().tolist(),8)
+        knnClassifier.addExample(train8Goldman.pick(null,null,null,i).flatten().tolist(),8)
+        knnClassifier.addExample(train8Matthews.pick(null,null,null,i).flatten().tolist(),8)
+        knnClassifier.addExample(train8McCallion.pick(null,null,null,i).flatten().tolist(),8)
+
+        //////////////////////////////////////////
+
+
+        //////////////////////////////////////////
+        // TRAINING FOR DIGIT 9
+        knnClassifier.addExample(train9.pick(null,null,null,i).flatten().tolist(),9)
+        knnClassifier.addExample(train9Bongard.pick(null,null,null,i).flatten().tolist(),9)
+        knnClassifier.addExample(train9KLee.pick(null,null,null,i).flatten().tolist(),9)
+        knnClassifier.addExample(train9McLaughlin.pick(null,null,null,i).flatten().tolist(),9)
+        knnClassifier.addExample(train9Rice.pick(null,null,null,i).flatten().tolist(),9)
+        knnClassifier.addExample(train9Woolley.pick(null,null,null,i).flatten().tolist(),9)
+
+        //////////////////////////////////////////
+
     }
-    
+    console.log('Done Training!')
     trainingCompleted = true;
     //console.log(train8.toString())
     //console.log(test.toString())
@@ -164,11 +225,11 @@ function GotResults(err,result)
     //predictedClassLabels.set(testingSampleIndex,parseInt(result.label))
     predictedClassLabels.set(parseInt(result.label))
     numPredictions += 1;
-    meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == 7))/numPredictions
+    meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == 4))/numPredictions
     //console.log(testingSampleIndex,parseInt(result.label));
-    console.log(numPredictions,meanPredictionAcc,parseInt(result.label))
-    
-    //console.log(parseInt(result.label));
+    //console.log(numPredictions,meanPredictionAcc,parseInt(result.label))
+    //console.log(parseInt(result.label))
+    console.log(parseInt(result.label));
     
     
     //testingSampleIndex = testingSampleIndex+1;
