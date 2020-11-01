@@ -8,12 +8,12 @@ var predictedClassLabels = nj.zeros(numSamples)
 var framesOfData = nj.zeros([5,4,6]);
 var numPredictions = 0;
 var meanPredictionAcc = 0;
+var programState = 0;
 
-var c = 9;
 
 function Train()
 {
-    for(i=0;i<train8.shape[3]-1;i++)
+    for(i=0;i<train8.shape[3];i++)
     {
         //////////////////////////////////////////
         // TRAINING FOR 0 DIGIT //
@@ -228,15 +228,11 @@ function CenterData()
 
 function Test()
 {
-    //for(j=0;j<test.shape[3];j++)
-    //{
-        features = framesOfData.pick(null,null,null);
-        CenterData()
-        features = features.flatten();
-        predictedLabel = knnClassifier.classify(features.tolist(),GotResults);
-        //console.log(j,features.toString(),0,predictedLabel)
 
-    //}
+    features = framesOfData.pick(null,null,null);
+    CenterData()
+    features = features.flatten();
+    predictedLabel = knnClassifier.classify(features.tolist(),GotResults);
 
 }
 function GotResults(err,result)
@@ -244,11 +240,11 @@ function GotResults(err,result)
     //predictedClassLabels.set(testingSampleIndex,parseInt(result.label))
     predictedClassLabels.set(parseInt(result.label))
     numPredictions += 1;
-    meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == 9))/numPredictions
+    meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == 4))/numPredictions
     //console.log(testingSampleIndex,parseInt(result.label));
-    console.log(numPredictions,meanPredictionAcc,parseInt(result.label))
+    //console.log(numPredictions,meanPredictionAcc,parseInt(result.label))
     //console.log(parseInt(result.label))
-    //console.log(numPredictions,parseInt(result.label));
+    console.log(parseInt(result.label));
     
     
     //testingSampleIndex = testingSampleIndex+1;
@@ -293,12 +289,14 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
     framesOfData.set(fingerIndex,weight,5,normalizedNextJoint[2])
     
     //console.log(framesOfData.toString());
-    Test()
+    
+    // Comment out test
+    //Test()
 
-    var xb = window.innerWidth * normalizedPrevJoint[0];
-    var yb = window.innerHeight * (1 - normalizedPrevJoint[1]);
-    var xt = window.innerWidth * normalizedNextJoint[0];
-    var yt = window.innerHeight * (1 - normalizedNextJoint[1]);
+    var xb = window.innerWidth/2 * normalizedPrevJoint[0];
+    var yb = window.innerHeight/2 * (1 - normalizedPrevJoint[1]);
+    var xt = window.innerWidth/2 * normalizedNextJoint[0];
+    var yt = window.innerHeight/2 * (1 - normalizedNextJoint[1]);
 
     strokeWeight(10-(2*weight));
     color_shade = (4-weight)*50;
@@ -316,17 +314,139 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
     line(xb,yb,xt,yt);
 }
 
-// function draw()
-Leap.loop(controllerOptions, function(frame){
-    //console.log(numSamples,numFeatures)
-    //console.log(irisData.toString())
-    currentNumHands = frame.hands.length;
-    clear();
+function DetermineState(frame){
+    if(frame.hands.length == 0){
+        programState = 0;
+    }
+    else if(frame.hands.length >= 1){
+        programState = 1;
+    }
+    else {
+        programState=2;
+    }
+}
+function TrainKNNIfNotDoneYet(trainingCompleted){
     if(trainingCompleted == false)
     {
-        Train();
+        //Train();
     }
+}
+
+function DrawImageToHelpUserPutThereHandOverDevice(){
+    image(handOverDevice,0,0,window.innerWidth/2,window.innerHeight/2);
+}
+function DrawArrowRight(){
+    image(handLeftDevice,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
+}
+function DrawArrowLeft(){
+    image(handRightDevice,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
+}
+function DrawArrowDown(){
+    image(handAboveDevice,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
+}
+function DrawArrowUp(){
+    image(handBelowDevice,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
+}
+function DrawArrowTo(){
+    image(handCloseDevice,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
+}
+function DrawArrowFrom(){
+    image(handFarDevice,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
+}
+
+function HandIsTooFarToTheLeft(){
+    xValues = framesOfData.slice([],[],[0,6,3]);
+    currentMean = xValues.mean();
+    if(currentMean < 0.25){
+        return true
+    }
+}
+function HandIsTooFarToTheRight(){
+    xValues = framesOfData.slice([],[],[0,6,3]);
+    currentMean = xValues.mean();
+    if(currentMean > 0.75){
+        return true
+    }
+}
+function HandDriftTooHigh(){
+    yValues = framesOfData.slice([],[],[1,6,3]);
+    currentMean = yValues.mean();
+    if(currentMean > 0.75){
+        return true
+    }
+}
+function HandDriftTooLow(){
+    yValues = framesOfData.slice([],[],[1,6,3]);
+    currentMean = yValues.mean();
+    if(currentMean < 0.25){
+        return true
+    }
+}
+function HandTooFarFromBody(){
+    zValues = framesOfData.slice([],[],[2,6,3]);
+    currentMean = zValues.mean();
+    if(currentMean < 0.25){
+        return true
+    }
+}
+function HandTooCloseToBody(){
+    zValues = framesOfData.slice([],[],[2,6,3]);
+    currentMean = zValues.mean();
+    if(currentMean > 0.75){
+        return true
+    }
+}
+function HandIsUncentered(){
+    return HandIsTooFarToTheLeft() || HandIsTooFarToTheRight() || HandDriftTooHigh() || HandDriftTooLow() || HandTooCloseToBody() || HandTooFarFromBody()
+}
+
+function HandleState0(frame){
+    TrainKNNIfNotDoneYet(trainingCompleted)
+    DrawImageToHelpUserPutThereHandOverDevice()
+}
+
+function HandleState1(frame){
     HandleFrame(frame,Test);
+    if(HandIsTooFarToTheLeft()){
+        DrawArrowRight()
+    }
+    if(HandIsTooFarToTheRight()){
+        DrawArrowLeft()
+    }
+    if(HandDriftTooHigh()){
+        DrawArrowDown()
+    }
+    if(HandDriftTooLow()){
+        DrawArrowUp()
+    }
+    if(HandTooFarFromBody()){
+        DrawArrowFrom()
+    }
+    if(HandTooCloseToBody()){
+        DrawArrowTo()
+    }
+}
+
+function HandleState2(frame){
+    HandleFrame(frame,Test);
+}
+
+// function draw()
+Leap.loop(controllerOptions, function(frame){
+    clear();
+    currentNumHands = frame.hands.length;
+    DetermineState(frame);
+    console.log(programState)
+    if(programState ==0){
+        HandleState0(frame);
+    }
+    else if(programState==1){
+        HandleState1(frame);
+    }
+    else if(prgramState==2){
+        HandleState2(frame)
+    }
+
     //console.log(framesOfData.toString());
     //Test();
     previousNumHands = currentNumHands;   
