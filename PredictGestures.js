@@ -9,6 +9,8 @@ var framesOfData = nj.zeros([5,4,6]);
 var numPredictions = 0;
 var meanPredictionAcc = 0;
 var programState = 0;
+var digitToShow = 0;
+var timeSinceLastDigitChange = new Date();
 
 
 function Train()
@@ -240,11 +242,11 @@ function GotResults(err,result)
     //predictedClassLabels.set(testingSampleIndex,parseInt(result.label))
     predictedClassLabels.set(parseInt(result.label))
     numPredictions += 1;
-    meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == 4))/numPredictions
+    meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == digitToShow))/numPredictions
     //console.log(testingSampleIndex,parseInt(result.label));
-    //console.log(numPredictions,meanPredictionAcc,parseInt(result.label))
+    console.log(numPredictions,'Mean Prediction Accuracy: ',meanPredictionAcc,parseInt(result.label))
     //console.log(parseInt(result.label))
-    console.log(parseInt(result.label));
+    //console.log(parseInt(result.label));
     
     
     //testingSampleIndex = testingSampleIndex+1;
@@ -291,7 +293,7 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
     //console.log(framesOfData.toString());
     
     // Comment out test
-    //Test()
+    Test()
 
     var xb = window.innerWidth/2 * normalizedPrevJoint[0];
     var yb = window.innerHeight/2 * (1 - normalizedPrevJoint[1]);
@@ -318,7 +320,7 @@ function DetermineState(frame){
     if(frame.hands.length == 0){
         programState = 0;
     }
-    else if(frame.hands.length >= 1){
+    else if(frame.hands.length >= 1 && HandIsUncentered() == true){
         programState = 1;
     }
     else {
@@ -328,7 +330,7 @@ function DetermineState(frame){
 function TrainKNNIfNotDoneYet(trainingCompleted){
     if(trainingCompleted == false)
     {
-        //Train();
+        Train();
     }
 }
 
@@ -455,6 +457,43 @@ function SignIn(){
     return false;
 }
 
+function DetermineWheterToSwitchDigits(){
+    if(TimeToSwitchDigits() == true){
+        timeSinceLastDigitChange = new Date()
+        numPredictions = 0;
+        SwitchDigits()
+    }
+
+}
+
+function SwitchDigits(){
+    if(digitToShow == 0){
+        digitToShow = 1
+    }
+    else if(digitToShow == 1){
+        digitToShow = 0
+    } 
+}
+
+function TimeToSwitchDigits(){
+    currentTime = new Date();
+    differenceSinceChangeInMilliseconds = currentTime - timeSinceLastDigitChange
+    differenceSinceChangeInSeconds = differenceSinceChangeInMilliseconds/1000
+    if(differenceSinceChangeInSeconds > 10){
+        return true
+    }
+}
+
+function DrawLowerRightPanel(){
+    if(digitToShow == 0){
+        image(zeroDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+    }
+    else{
+        image(oneDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+    }
+}
+
+
 function HandleState0(frame){
     TrainKNNIfNotDoneYet(trainingCompleted)
     DrawImageToHelpUserPutThereHandOverDevice()
@@ -483,6 +522,8 @@ function HandleState1(frame){
 }
 
 function HandleState2(frame){
+    DrawLowerRightPanel();
+    DetermineWheterToSwitchDigits();
     HandleFrame(frame,Test);
 }
 
@@ -498,7 +539,7 @@ Leap.loop(controllerOptions, function(frame){
     else if(programState==1){
         HandleState1(frame);
     }
-    else if(prgramState==2){
+    else if(programState==2){
         HandleState2(frame)
     }
 

@@ -14,6 +14,9 @@ function setup() {
     handAboveDevice= loadImage('https://i.postimg.cc/SQzK5qZ1/hand-to-up.jpg');
     handCloseDevice= loadImage('https://i.postimg.cc/fRMTJdM1/hand-to-close-annotated.png');
     handFarDevice = loadImage('https://i.postimg.cc/g0TYSB3P/hand-to-far-away-annotated.png');
+
+    zeroDigit = loadImage('https://i.postimg.cc/Qx6W9Ncw/0-digit.png');
+    oneDigit = loadImage('https://i.postimg.cc/sfmMqfHx/1-digit.png');
     //img = loadImage("https://i.imgur.com/4xbRm3f.jpgZ");
     //img = loadImage('https://cors-anywhere.herokuapp.com/https://imgur.com/a/QywWMUo.jpg');
 }
