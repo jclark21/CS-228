@@ -53,8 +53,8 @@ function Train()
         
         
         //knnClassifier.addExample(train2Jimmo.pick(null,null,null,i).flatten().tolist(),2)
-        //knnClassifier.addExample(train2Jing.pick(null,null,null,i).flatten().tolist(),2)
-        //knnClassifier.addExample(train2Liu.pick(null,null,null,i).flatten().tolist(),2)
+        knnClassifier.addExample(train2Jing.pick(null,null,null,i).flatten().tolist(),2)
+        knnClassifier.addExample(train2Liu.pick(null,null,null,i).flatten().tolist(),2)
         //knnClassifier.addExample(train2Neff.pick(null,null,null,i).flatten().tolist(),2)
         //////////////////////////////////////////
 
@@ -71,8 +71,8 @@ function Train()
         //////////////////////////////////////////
         // TRAINING FOR DIGIT 4 //
         knnClassifier.addExample(train4.pick(null,null,null,i).flatten().tolist(),4)
-        //knnClassifier.addExample(train4Beattie.pick(null,null,null,i).flatten().tolist(),4)
-        //knnClassifier.addExample(train4Bertschinger.pick(null,null,null,i).flatten().tolist(),4)
+        knnClassifier.addExample(train4Beattie.pick(null,null,null,i).flatten().tolist(),4)
+        knnClassifier.addExample(train4Bertschinger.pick(null,null,null,i).flatten().tolist(),4)
         
         //knnClassifier.addExample(train4Faucher.pick(null,null,null,i).flatten().tolist(),4)
         
@@ -94,7 +94,7 @@ function Train()
         //////////////////////////////////////////
         // TRAINING FOR DIGIT 6 //
         knnClassifier.addExample(train6.pick(null,null,null,i).flatten().tolist(),6)
-        //knnClassifier.addExample(train6Fekert.pick(null,null,null,i).flatten().tolist(),6)
+        knnClassifier.addExample(train6Fekert.pick(null,null,null,i).flatten().tolist(),6)
         //knnClassifier.addExample(train6Fisher.pick(null,null,null,i).flatten().tolist(),6)
         //knnClassifier.addExample(train6Koretsky.pick(null,null,null,i).flatten().tolist(),6)
         
@@ -106,8 +106,9 @@ function Train()
         //////////////////////////////////////////
         // TRAINING FOR DIGIT 7
         knnClassifier.addExample(train7.pick(null,null,null,i).flatten().tolist(),7)
-        knnClassifier.addExample(train7Fisher.pick(null,null,null,i).flatten().tolist(),7)
-        knnClassifier.addExample(train7Laquerre.pick(null,null,null,i).flatten().tolist(),7)
+        
+        //knnClassifier.addExample(train7Fisher.pick(null,null,null,i).flatten().tolist(),7)
+        //knnClassifier.addExample(train7Laquerre.pick(null,null,null,i).flatten().tolist(),7)
         //knnClassifier.addExample(train7Manian.pick(null,null,null,i).flatten().tolist(),7)
         //knnClassifier.addExample(train7Pooprasert.pick(null,null,null,i).flatten().tolist(),7)
         
@@ -461,9 +462,10 @@ function SignIn(){
 }
 
 function DetermineWheterToSwitchDigits(){
-    if(TimeToSwitchDigits() == true && meanPredictionAcc > 0.20){
+    if(TimeToSwitchDigits() == true && meanPredictionAcc > 0.15){
         timeSinceLastDigitChange = new Date()
         numPredictions = 0;
+        meanPredictionAcc = 0;
         SwitchDigits()
     }
 }
