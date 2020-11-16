@@ -463,7 +463,6 @@ function DetermineWheterToSwitchDigits(){
         numPredictions = 0;
         SwitchDigits()
     }
-
 }
 
 function SwitchDigits(){
@@ -488,8 +487,32 @@ function DrawLowerRightPanel(){
     if(digitToShow == 0){
         image(zeroDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
     }
-    else{
+    else if(digitToShow == 1){
+        image(oneDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+    }
+    else if(digitToShow ==2){
+        image(twoDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+    }
+    else if(digitToShow ==3){
         image(threeDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+    }
+    else if(digitToShow ==4){
+        image(fourDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+    }
+    else if(digitToShow ==5){
+        image(fiveDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+    }
+    else if(digitToShow ==6){
+        image(sixDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+    }
+    else if(digitToShow ==7){
+        image(sevenDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+    }
+    else if(digitToShow ==8){
+        image(eightDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+    }
+    else if(digitToShow ==9){
+        image(nineDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
     }
 }
 

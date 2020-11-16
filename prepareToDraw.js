@@ -17,7 +17,14 @@ function setup() {
 
     zeroDigit = loadImage('https://i.postimg.cc/Qx6W9Ncw/0-digit.png');
     oneDigit = loadImage('https://i.postimg.cc/sfmMqfHx/1-digit.png');
+    twoDigit = loadImage('https://i.postimg.cc/NFbxwgk3/2-digit.png');
     threeDigit = loadImage('https://i.postimg.cc/Jz7k6D5p/3-digit.png');
+    fourDigit = loadImage('https://i.postimg.cc/TwV9CjLY/4-digit.png');
+    fiveDigit = loadImage('https://i.postimg.cc/jqhcfXYM/5-digit.png');
+    sixDigit = loadImage('https://i.postimg.cc/28cxcS6v/6-digit.png');
+    sevenDigit = loadImage('https://i.postimg.cc/qRTchtbf/7-digit.png');
+    eightDigit = loadImage('https://i.postimg.cc/0Q0Yp8Fz/8-digit.png');
+    nineDigit = loadImage('https://i.postimg.cc/QC6cyfXs/9-digit.png');
     //img = loadImage("https://i.imgur.com/4xbRm3f.jpgZ");
     //img = loadImage('https://cors-anywhere.herokuapp.com/https://imgur.com/a/QywWMUo.jpg');
 }
