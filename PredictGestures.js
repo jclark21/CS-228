@@ -287,8 +287,10 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
     framesOfData.set(fingerIndex,weight,4,normalizedNextJoint[1])
     framesOfData.set(fingerIndex,weight,5,normalizedNextJoint[2])
     //console.log(framesOfData.toString());
+    
+    
     // Comment out test
-    Test()
+    //Test()
 
     var xb = window.innerWidth/2 * normalizedPrevJoint[0];
     var yb = window.innerHeight/2 * (1 - normalizedPrevJoint[1]);
@@ -318,11 +320,11 @@ function DetermineState(frame){
     else if(frame.hands.length >= 1 && HandIsUncentered() == true){
         programState = 1;
     }
-    else if(frame.hands.length == 2){
-        programState = 3;
-    }
-    else {
+    else if (frame.hands.length == 1 && HandIsUncentered() == false){
         programState=2;
+    }
+    else if(frame.hands.length == 2 && HandIsUncentered() == false){
+        programState = 3;
     }
 }
 function TrainKNNIfNotDoneYet(trainingCompleted){
@@ -359,12 +361,18 @@ function HandIsTooFarToTheLeft(){
     if(currentMean < 0.25){
         return true
     }
+    else{
+        return false
+    }
 }
 function HandIsTooFarToTheRight(){
     xValues = framesOfData.slice([],[],[0,6,3]);
     currentMean = xValues.mean();
     if(currentMean > 0.75){
         return true
+    }
+    else{
+        return false
     }
 }
 function HandDriftTooHigh(){
@@ -373,12 +381,18 @@ function HandDriftTooHigh(){
     if(currentMean > 0.75){
         return true
     }
+    else{
+        return false
+    }
 }
 function HandDriftTooLow(){
     yValues = framesOfData.slice([],[],[1,6,3]);
     currentMean = yValues.mean();
     if(currentMean < 0.25){
         return true
+    }
+    else{
+        return false
     }
 }
 function HandTooFarFromBody(){
@@ -387,12 +401,18 @@ function HandTooFarFromBody(){
     if(currentMean < 0.25){
         return true
     }
+    else{
+        return false
+    }
 }
 function HandTooCloseToBody(){
     zValues = framesOfData.slice([],[],[2,6,3]);
     currentMean = zValues.mean();
     if(currentMean > 0.75){
         return true
+    }
+    else{
+        return false
     }
 }
 function HandIsUncentered(){
@@ -707,7 +727,7 @@ function DrawEqLowerLeftPanel(firstVar,sign,secondVar){
     DrawSecondVariable(secondVar);
 }
 function HandleState0(frame){
-    TrainKNNIfNotDoneYet(trainingCompleted)
+    //TrainKNNIfNotDoneYet(trainingCompleted)
     DrawImageToHelpUserPutThereHandOverDevice()
 }
 function HandleState1(frame){
@@ -750,7 +770,6 @@ function HandleState3(frame){
     else{
         DrawEqLowerLeftPanel(firstVar,sign,secondVar);
     }
-    //DetermineWheterToSwitchEquations();
     HandleFrame(frame,Test)
 
 }
