@@ -5,6 +5,9 @@ var handBelowDevice;
 var handAboveDevice;
 var handCloseDevice;
 var handFarDevice;
+
+var addition;
+var subtraction;
 function setup() {
     createCanvas(window.innerWidth,window.innerHeight);
     handOverDevice = loadImage('https://i.postimg.cc/tCxQ12cv/hand-over-device.jpg');
@@ -36,6 +39,9 @@ function setup() {
      seven = loadImage('https://i.postimg.cc/G26QQcjr/7-pic.png');
      eight = loadImage('https://i.postimg.cc/y6SnNZVN/8-pic.png');
      nine = loadImage('https://i.postimg.cc/bNcgSwJ9/9-pic.png');
+
+     addition = loadImage('https://i.postimg.cc/rwH4qMj7/addition.png');
+     subtraction = loadImage('https://i.postimg.cc/rmXttjvJ/subtraction.png');
     //img = loadImage("https://i.imgur.com/4xbRm3f.jpgZ");
     //img = loadImage('https://cors-anywhere.herokuapp.com/https://imgur.com/a/QywWMUo.jpg');
 }

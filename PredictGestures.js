@@ -11,6 +11,10 @@ var meanPredictionAcc = 0;
 var programState = 0;
 var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
+var firstVar = 0;
+var secondVar = 0;
+var answer = 0;
+var sign = 0;
 
 
 function Train()
@@ -146,8 +150,6 @@ function Train()
     //console.log(train8.toString())
     //console.log(test.toString())
 }
-
-
 function CenterXData()
 {
     xValues = framesOfData.slice([],[],[0,6,3]);
@@ -171,7 +173,6 @@ function CenterXData()
     currentMean = xValues.mean();
     //console.log(currentMean);
 }
-
 function CenterYData()
 {
     yValues = framesOfData.slice([],[],[1,6,3]);
@@ -197,7 +198,6 @@ function CenterYData()
 
 
 }
-
 function CenterZData()
 {
     zValues = framesOfData.slice([],[],[2,6,3]);
@@ -222,24 +222,18 @@ function CenterZData()
     //console.log(currentMean);
 
 }
-
 function CenterData()
 {
     CenterXData()
     CenterYData()
     CenterZData()
 }
-
-
-
 function Test()
 {
-
     features = framesOfData.pick(null,null,null);
     CenterData()
     features = features.flatten();
     predictedLabel = knnClassifier.classify(features.tolist(),GotResults);
-
 }
 function GotResults(err,result)
 {
@@ -286,16 +280,13 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
     normalizedPrevJoint = interactionBox.normalizePoint(bone.prevJoint,true)
     normalizedNextJoint = interactionBox.normalizePoint(bone.nextJoint,true)
     
-    
     framesOfData.set(fingerIndex,weight,0,normalizedPrevJoint[0])
     framesOfData.set(fingerIndex,weight,1,normalizedPrevJoint[1])
     framesOfData.set(fingerIndex,weight,2,normalizedPrevJoint[2])
     framesOfData.set(fingerIndex,weight,3,normalizedNextJoint[0])
     framesOfData.set(fingerIndex,weight,4,normalizedNextJoint[1])
     framesOfData.set(fingerIndex,weight,5,normalizedNextJoint[2])
-    
     //console.log(framesOfData.toString());
-    
     // Comment out test
     Test()
 
@@ -326,6 +317,9 @@ function DetermineState(frame){
     }
     else if(frame.hands.length >= 1 && HandIsUncentered() == true){
         programState = 1;
+    }
+    else if(frame.hands.length == 2){
+        programState = 3;
     }
     else {
         programState=2;
@@ -359,7 +353,6 @@ function DrawArrowTo(){
 function DrawArrowFrom(){
     image(handFarDevice,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
 }
-
 function HandIsTooFarToTheLeft(){
     xValues = framesOfData.slice([],[],[0,6,3]);
     currentMean = xValues.mean();
@@ -405,7 +398,6 @@ function HandTooCloseToBody(){
 function HandIsUncentered(){
     return HandIsTooFarToTheLeft() || HandIsTooFarToTheRight() || HandDriftTooHigh() || HandDriftTooLow() || HandTooCloseToBody() || HandTooFarFromBody()
 }
-
 function IsNewUser(username,list){
     var users = list.children;
     var usernameFound = false;
@@ -418,7 +410,6 @@ function IsNewUser(username,list){
     }
     return usernameFound == false
 }
-
 function CreateNewUser(username,list){
     // Create list item
     var item = document.createElement('li');
@@ -427,19 +418,16 @@ function CreateNewUser(username,list){
     item.innerHTML = String(username);
     list.appendChild(item);
 }
-
 function CreateSignInItem(username,list){
     var item = document.createElement('li');
     item.id = String(username) + "_signins";
     item.innerHTML = 1;
     list.appendChild(item);
 }
-
 function SignIn(){
     //console.log('SignIn Function Called')
     //Unordered list with an ID of 'users'
     username = document.getElementById('username').value;
-
     var list = document.getElementById('users');
     if(IsNewUser(username,list) == true){
         CreateNewUser(username,list);
@@ -447,7 +435,6 @@ function SignIn(){
     }
     else{
         // Handle Returning User
-
         //Create ID tag for the list item that contains user's number of sign in attempts
         ID = String(username) + "_signins"
         // Return Item
@@ -469,7 +456,6 @@ function DetermineWheterToSwitchDigits(){
         SwitchDigits()
     }
 }
-
 function SwitchDigits(){
     if(digitToShow == 0){
         digitToShow = 1
@@ -502,7 +488,6 @@ function SwitchDigits(){
         digitToShow = 0
     }
 }
-
 function TimeToSwitchDigits(){
     currentTime = new Date();
     differenceSinceChangeInMilliseconds = currentTime - timeSinceLastDigitChange
@@ -511,7 +496,6 @@ function TimeToSwitchDigits(){
         return true
     }
 }
-
 function DrawLowerRightPanel(){
     if(digitToShow == 0){
         image(zeroDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
@@ -544,7 +528,6 @@ function DrawLowerRightPanel(){
         image(nineDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
     }
 }
-
 function DrawLowerLeftPanel(){
     if(digitToShow == 0){
         image(zero,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
@@ -577,12 +560,118 @@ function DrawLowerLeftPanel(){
         image(nine,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
     }
 }
+function GenerateAdditionEq(){
+    firstVar = Math.floor(Math.random() * 10); 
+    secondVar = Math.floor(Math.random() * 10);
+    while(firstVar + secondVar > 9){
+        firstVar = Math.floor(Math.random() * 10); 
+        secondVar = Math.floor(Math.random() * 10);
+    } 
+    answer = firstVar + secondVar;
+    sign = 0;
+    return firstVar,sign,secondVar,answer
+}
+function GenerateSubtractionEq(){
+    firstVar = Math.floor(Math.random() * 10); 
+    secondVar = Math.floor(Math.random() * 10);
+    while(firstVar - secondVar < 0){
+        firstVar = Math.floor(Math.random() * 10); 
+        secondVar = Math.floor(Math.random() * 10);
+    } 
+    answer = firstVar - secondVar;
+    sign = 1;
+    return firstVar,sign,secondVar,answer
+}
 
+function GenerateEquation(){
+    if(Math.random()< 0.5){
+        return GenerateAdditionEq();
+    }
+    else{
+        return GenerateSubtractionEq();
+    }
+}
+function DrawFirstVariable(firstVar){
+    if(firstVar == 0){
+        image(zero,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 1){
+        image(one,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 2){
+        image(two,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 3){
+        image(three,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 4){
+        image(four,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 5){
+        image(five,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 6){
+        image(six,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 7){
+        image(seven,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 8){
+        image(eight,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 9){
+        image(nine,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+}
+function DrawSign(sign){
+    if(sign == 0){
+        image(addition,window.innerWidth/6,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    else if(sign == 1){
+        image(subtraction,window.innerWidth/6,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+}
+function DrawSecondVariable(secondVar){
+    if(secondVar == 0){
+        image(zero,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(secondVar == 1){
+        image(one,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(secondVar == 2){
+        image(two,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(secondVar == 3){
+        image(three,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(secondVar == 4){
+        image(four,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(secondVar == 5){
+        image(five,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(secondVar == 6){
+        image(six,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(secondVar == 7){
+        image(seven,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(secondVar == 8){
+        image(eight,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(secondVar == 9){
+        image(nine,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+}
+function DrawEqLowerLeftPanel(firstVar,sign,secondVar,answer){
+    DrawFirstVariable(firstVar);
+    DrawSign(sign);
+    DrawSecondVariable(secondVar);
+}
 function HandleState0(frame){
     TrainKNNIfNotDoneYet(trainingCompleted)
     DrawImageToHelpUserPutThereHandOverDevice()
 }
-
 function HandleState1(frame){
     HandleFrame(frame,Test);
     if(HandIsTooFarToTheLeft()){
@@ -604,7 +693,6 @@ function HandleState1(frame){
         DrawArrowTo()
     }
 }
-
 function HandleState2(frame){
     if(meanPredictionAcc > 0.10){
         DrawLowerLeftPanel();
@@ -613,12 +701,16 @@ function HandleState2(frame){
         DrawLowerRightPanel();
         DrawLowerLeftPanel();
     }
-    
-    
     DetermineWheterToSwitchDigits();
     HandleFrame(frame,Test);
 }
+function HandleState3(frame){
+    firstVar,sign,secondVar,answer = GenerateEquation();
+    DrawEqLowerLeftPanel(firstVar,sign,secondVar,answer);
+    //DetermineWheterToSwitchEquations();
+    //HandleFrame(frame,Test)
 
+}
 // function draw()
 Leap.loop(controllerOptions, function(frame){
     clear();
@@ -634,7 +726,9 @@ Leap.loop(controllerOptions, function(frame){
     else if(programState==2){
         HandleState2(frame)
     }
-
+    else if(programState==3){
+        HandleState3(frame)
+    }
     //console.log(framesOfData.toString());
     //Test();
     previousNumHands = currentNumHands;   
