@@ -11,9 +11,9 @@ var meanPredictionAcc = 0;
 var programState = 0;
 var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
-var firstVar = 0;
-var secondVar = 0;
-var answer = 0;
+var firstVar = 2;
+var secondVar = 3;
+var answer = 5;
 var sign = 0;
 
 
@@ -560,6 +560,17 @@ function DrawLowerLeftPanel(){
         image(nine,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
     }
 }
+function DetermineWheterToSwitchEquations(){
+    if(TimeToSwitchDigits() == true){
+        timeSinceLastDigitChange = new Date()
+        numPredictions = 0;
+        meanPredictionAcc = 0;
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 function GenerateAdditionEq(){
     firstVar = Math.floor(Math.random() * 10); 
     secondVar = Math.floor(Math.random() * 10);
@@ -663,7 +674,7 @@ function DrawSecondVariable(secondVar){
         image(nine,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
     }
 }
-function DrawEqLowerLeftPanel(firstVar,sign,secondVar,answer){
+function DrawEqLowerLeftPanel(firstVar,sign,secondVar){
     DrawFirstVariable(firstVar);
     DrawSign(sign);
     DrawSecondVariable(secondVar);
@@ -705,10 +716,15 @@ function HandleState2(frame){
     HandleFrame(frame,Test);
 }
 function HandleState3(frame){
-    firstVar,sign,secondVar,answer = GenerateEquation();
-    DrawEqLowerLeftPanel(firstVar,sign,secondVar,answer);
+    if(DetermineWheterToSwitchEquations() == true){
+        firstVar,sign,secondVar,digitToShow = GenerateEquation();
+        DrawEqLowerLeftPanel(firstVar,sign,secondVar);
+    }
+    else{
+        DrawEqLowerLeftPanel(firstVar,sign,secondVar);
+    }
     //DetermineWheterToSwitchEquations();
-    //HandleFrame(frame,Test)
+    HandleFrame(frame,Test)
 
 }
 // function draw()
