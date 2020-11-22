@@ -583,10 +583,10 @@ function GenerateAdditionEq(){
     return firstVar,sign,secondVar,answer
 }
 function GenerateSubtractionEq(){
-    firstVar = Math.floor(Math.random() * 10); 
+    firstVar = Math.floor(Math.random() * 18); 
     secondVar = Math.floor(Math.random() * 10);
-    while(firstVar - secondVar < 0){
-        firstVar = Math.floor(Math.random() * 10); 
+    while(firstVar - secondVar < 0 || firstVar - secondVar > 9){
+        firstVar = Math.floor(Math.random() * 18); 
         secondVar = Math.floor(Math.random() * 10);
     } 
     answer = firstVar - secondVar;
@@ -632,6 +632,33 @@ function DrawFirstVariable(firstVar){
     }
     if(firstVar == 9){
         image(nine,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 10){
+        image(ten,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 11){
+        image(eleven,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 12){
+        image(twelve,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 13){
+        image(thirteen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 14){
+        image(fourteen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 15){
+        image(fifteen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 16){
+        image(sixteen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 17){
+        image(seventeen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+    }
+    if(firstVar == 18){
+        image(eighteen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
     }
 }
 function DrawSign(sign){
