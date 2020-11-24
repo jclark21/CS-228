@@ -290,7 +290,7 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
     
     
     // Comment out test
-    //Test()
+    Test()
 
     var xb = window.innerWidth/2 * normalizedPrevJoint[0];
     var yb = window.innerHeight/2 * (1 - normalizedPrevJoint[1]);
@@ -613,7 +613,6 @@ function GenerateSubtractionEq(){
     sign = 1;
     return firstVar,sign,secondVar,answer
 }
-
 function GenerateEquation(){
     if(Math.random()< 0.5){
         return GenerateAdditionEq();
@@ -727,7 +726,7 @@ function DrawEqLowerLeftPanel(firstVar,sign,secondVar){
     DrawSecondVariable(secondVar);
 }
 function HandleState0(frame){
-    //TrainKNNIfNotDoneYet(trainingCompleted)
+    TrainKNNIfNotDoneYet(trainingCompleted)
     DrawImageToHelpUserPutThereHandOverDevice()
 }
 function HandleState1(frame){
