@@ -1,9 +1,7 @@
 const knnClassifier = ml5.KNNClassifier();
-//var testingSampleIndex = 0;
 var controllerOptions = {};
 var trainingCompleted = false;
-var numSamples = 100;//test.shape[3];
-//var numFeatures = irisData.shape[1]-1;
+var numSamples = 100;
 var predictedClassLabels = nj.zeros(numSamples)
 var framesOfData = nj.zeros([5,4,6]);
 var numPredictions = 0;
@@ -11,7 +9,6 @@ var meanPredictionAcc = 0;
 var programState = 0;
 var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
-
 var firstVar = 2;
 var secondVar = 3;
 var answer = 5;
@@ -24,7 +21,9 @@ function Train()
     {
         ///////////////////////////////////////
         // TRAINING FOR FIRST //
-        knnClassifier.addExample(trainFist.pick(null,null,null,i).flatten().tolist(),10)
+        knnClassifier.addExample(trainFistRight.pick(null,null,null,i).flatten().tolist(),10)
+        knnClassifier.addExample(trainFistLeft.pick(null,null,null,i).flatten().tolist(),10)
+
         //////////////////////////////////////////
         // TRAINING FOR 0 DIGIT //
         knnClassifier.addExample(train0.pick(null,null,null,i).flatten().tolist(),0)
@@ -290,10 +289,7 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
     framesOfData.set(fingerIndex,weight,3,normalizedNextJoint[0])
     framesOfData.set(fingerIndex,weight,4,normalizedNextJoint[1])
     framesOfData.set(fingerIndex,weight,5,normalizedNextJoint[2])
-    //console.log(framesOfData.toString());
-    
-    
-    // Comment out test
+
     Test()
 
     var xb = window.innerWidth/2 * normalizedPrevJoint[0];
@@ -303,16 +299,7 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
 
     strokeWeight(10-(2*weight));
     color_shade = (4-weight)*50;
-    /*
-    if(currentNumHands == 1)
-    {
-        stroke(color(0,color_shade,0));
-    }
-    else if (currentNumHands == 2)
-    {
-        stroke(color(color_shade,0,0));
-    }
-    */
+
     stroke(((4-weight)*60)*(1-meanPredictionAcc),((4-weight)*60)*meanPredictionAcc,0);
     line(xb,yb,xt,yt);
 }
@@ -776,7 +763,6 @@ function HandleState3(frame){
     HandleFrame(frame,Test)
 
 }
-// function draw()
 Leap.loop(controllerOptions, function(frame){
     clear();
     currentNumHands = frame.hands.length;
@@ -794,7 +780,5 @@ Leap.loop(controllerOptions, function(frame){
     else if(programState==3){
         HandleState3(frame)
     }
-    //console.log(framesOfData.toString());
-    //Test();
     previousNumHands = currentNumHands;   
 });

@@ -61,6 +61,4 @@ function setup() {
 
      addition = loadImage('https://i.postimg.cc/rwH4qMj7/addition.png');
      subtraction = loadImage('https://i.postimg.cc/rmXttjvJ/subtraction.png');
-    //img = loadImage("https://i.imgur.com/4xbRm3f.jpgZ");
-    //img = loadImage('https://cors-anywhere.herokuapp.com/https://imgur.com/a/QywWMUo.jpg');
 }
