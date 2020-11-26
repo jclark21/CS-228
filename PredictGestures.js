@@ -11,6 +11,7 @@ var meanPredictionAcc = 0;
 var programState = 0;
 var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
+
 var firstVar = 2;
 var secondVar = 3;
 var answer = 5;
@@ -21,6 +22,9 @@ function Train()
 {
     for(i=0;i<train8.shape[3];i++)
     {
+        ///////////////////////////////////////
+        // TRAINING FOR FIRST //
+        knnClassifier.addExample(trainFist.pick(null,null,null,i).flatten().tolist(),10)
         //////////////////////////////////////////
         // TRAINING FOR 0 DIGIT //
         knnClassifier.addExample(train0.pick(null,null,null,i).flatten().tolist(),0)
