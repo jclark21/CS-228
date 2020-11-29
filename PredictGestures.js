@@ -8,15 +8,11 @@ var numPredictions = 0;
 var meanPredictionAcc = 0;
 var programState = 0;
 var digitToShow = 0;
-
 var timeSinceLastDigitChange = new Date();
-
 var firstVar = 2;
 var secondVar = 3;
 var answer = 5;
 var sign = 0;
-
-var testingHand = 0;
 
 
 function Train()
@@ -26,12 +22,15 @@ function Train()
         ///////////////////////////////////////
         // TRAINING FOR FIRST //
         knnClassifier.addExample(trainFistRight.pick(null,null,null,i).flatten().tolist(),10)
+        //knnClassifier.addExample(trainFistLeft.pick(null,null,null,i).flatten().tolist(),10)
+        trainFistLeft = MirrorHand(trainFistRight)
         knnClassifier.addExample(trainFistLeft.pick(null,null,null,i).flatten().tolist(),10)
-
         //////////////////////////////////////////
         // TRAINING FOR 0 DIGIT //
         knnClassifier.addExample(train0.pick(null,null,null,i).flatten().tolist(),0)
-        
+        train0Left = MirrorHand(train0)
+        knnClassifier.addExample(train0Left.pick(null,null,null,i).flatten().tolist(),0)
+
         
         knnClassifier.addExample(train0Allison.pick(null,null,null,i).flatten().tolist(),0)
         knnClassifier.addExample(train0He.pick(null,null,null,i).flatten().tolist(),0)
@@ -94,6 +93,9 @@ function Train()
         //////////////////////////////////////////
         // TRAINING FOR DIGIT 5 //
         knnClassifier.addExample(train5.pick(null,null,null,i).flatten().tolist(),5)
+        train5Left = MirrorHand(train5)
+        knnClassifier.addExample(train5Left.pick(null,null,null,i).flatten().tolist(),5)
+
         //knnClassifier.addExample(train5Bertschinger.pick(null,null,null,i).flatten().tolist(),5)
         //knnClassifier.addExample(train5Blewett.pick(null,null,null,i).flatten().tolist(),5)
         //knnClassifier.addExample(train5Faucher.pick(null,null,null,i).flatten().tolist(),5)
@@ -235,31 +237,42 @@ function CenterData()
     CenterYData()
     CenterZData()
 }
-function Test(handNum)
+function MirrorHand(trainingData)
+{
+    xValues = trainingData.slice([],[],[0,6,3]);
+    for(r = 0;r<trainingData.shape[0];r++)
+    {
+        for(c=0;c<trainingData.shape[1];c++)
+        {
+            currentX = trainingData.get(r,c,0);
+            shiftedX = 1-currentX;
+            trainingData.set(r,c,0, shiftedX);
+
+            currentX = trainingData.get(r,c,3);
+            shiftedX = 1-currentX;
+            trainingData.set(r,c,3, shiftedX);
+        }
+    }
+    return trainingData
+}
+function Test()
 {
     features = framesOfData.pick(null,null,null);
     CenterData()
     features = features.flatten();
-    testingHand = handNum;
-    //console.log(handNum)
     predictedLabel = knnClassifier.classify(features.tolist(),GotResults);
-    //console.log("PLPL = ",predictedClassLabels)
 }
 function GotResults(err,result)
 {
     //predictedClassLabels.set(testingSampleIndex,parseInt(result.label))
     predictedClassLabels.set(parseInt(result.label))
-    //console.log("PLPL = ",predictedClassLabels)
     numPredictions += 1;
     meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == digitToShow))/numPredictions
     //console.log(testingSampleIndex,parseInt(result.label));
     console.log(numPredictions,'Mean Prediction Accuracy: ',meanPredictionAcc,parseInt(result.label))
-    //console.log('Testing Hand = ',testingHand)
     //console.log(parseInt(result.label))
     //console.log(parseInt(result.label));
-    if(parseInt(result.label) == 10 && testingHand == 1){
-        firstVar,sign,secondVar,digitToShow = GenerateEquation();
-    }
+    
     
     //testingSampleIndex = testingSampleIndex+1;
     //if(testingSampleIndex>=numSamples)
@@ -267,35 +280,27 @@ function GotResults(err,result)
     //    testingSampleIndex = 0;
     //}
 }
-
-
 function HandleFrame(frame,Test){
-    if(frame.hands.length==1){
+    if(frame.hands.length>=1)
+    {
      numHands = frame.hands.length
      hand = frame.hands[0];
      var interactionBox = frame.interactionBox;
-     HandleHand(hand,interactionBox,Test,0)
-    }
-    if(frame.hands.length == 2){
-        hand = frame.hands[0]
-        var interactionBox = frame.interactionBox;
-        HandleHand(hand,interactionBox,Test,0)
-        hand2 = frame.hands[1]
-        HandleHand(hand2,interactionBox,Test,1)
+     HandleHand(hand,interactionBox,Test)
     }
 }
-function HandleHand(hand,interactionBox,Test,handNum)
+function HandleHand(hand,interactionBox,Test)
 {
     fingers  = hand.fingers;
     for (var i = 3;i>-1;i--)
         {
             for (var j = 0;j<fingers.length;j++)
             {
-                HandleBone(fingers[j].bones[i],i,j,interactionBox,Test,handNum)
+                HandleBone(fingers[j].bones[i],i,j,interactionBox,Test)
             }
         }
 }
-function HandleBone(bone,weight,fingerIndex,interactionBox,Test,handNum)
+function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
 {
     normalizedPrevJoint = interactionBox.normalizePoint(bone.prevJoint,true)
     normalizedNextJoint = interactionBox.normalizePoint(bone.nextJoint,true)
@@ -307,7 +312,10 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test,handNum)
     framesOfData.set(fingerIndex,weight,4,normalizedNextJoint[1])
     framesOfData.set(fingerIndex,weight,5,normalizedNextJoint[2])
 
-    Test(handNum)
+    if(programState != 1 && programState != 0){
+        Test()
+    }
+    
 
     var xb = window.innerWidth/2 * normalizedPrevJoint[0];
     var yb = window.innerHeight/2 * (1 - normalizedPrevJoint[1]);
@@ -320,7 +328,6 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test,handNum)
     stroke(((4-weight)*60)*(1-meanPredictionAcc),((4-weight)*60)*meanPredictionAcc,0);
     line(xb,yb,xt,yt);
 }
-
 function DetermineState(frame){
     if(frame.hands.length == 0){
         programState = 0;
@@ -452,6 +459,25 @@ function CreateSignInItem(username,list){
     item.innerHTML = 1;
     list.appendChild(item);
 }
+function CreateAttemptsAccuracyItem(username,list){
+    for(dig = 0;dig<10;dig++){
+        var item = document.createElement('li');
+        item.id = String(username)+"_"+String(dig)+"_attempts";
+        item.innerHTML = 0;
+        list.appendChild(item)
+
+        var item = document.createElement('li');
+        item.id = String(username)+"_"+String(dig)+"_accuracy";
+        item.innerHTML = 0;
+        list.appendChild(item)
+    }
+}
+/* function CreateAccuracyItem(username,list){
+    var item = document.createElement('li');
+    item.id = String(username)+"_0_accuracy";
+    item.innerHTML = 0;
+    list.appendChild(item)
+} */
 function SignIn(){
     //console.log('SignIn Function Called')
     //Unordered list with an ID of 'users'
@@ -460,6 +486,8 @@ function SignIn(){
     if(IsNewUser(username,list) == true){
         CreateNewUser(username,list);
         CreateSignInItem(username,list);
+        CreateAttemptsAccuracyItem(username,list);
+        //CreateAccuracyItem(username,list)
     }
     else{
         // Handle Returning User
@@ -475,9 +503,33 @@ function SignIn(){
     //console.log(list)
     return false;
 }
+function TerminateUserSession(){
+    var list = document.getElementById('users');
+    console.log(list.innerHTML);
+    return false;
+}
+function IncrementUserDigitAttempts(digit){
+    username = document.getElementById('username').value;
+    //var list = document.getElementById('users');
+    ID = String(username) + "_" + String(digit) + "_attempts"
+    listItem = document.getElementById(ID);
+    listItem.innerHTML = parseInt(listItem.innerHTML) + 1;
+ }
+function IncrementUserDigitAccuracy(digit){
+    username = document.getElementById('username').value;
+    //var list = document.getElementById('users');
+    ID = String(username) + "_" + String(digit) + "_accuracy"
+    listItem = document.getElementById(ID);
+    previousAcc = parseInt(listItem.innerHTML)
+    if(meanPredictionAcc > previousAcc){
+        listItem.innerHTML = meanPredictionAcc;
+    }
+}
 function DetermineWheterToSwitchDigits(){
-    if((TimeToSwitchDigits() == true && meanPredictionAcc > 0.2)){//|| meanPredictionAcc > 0.5){
+    if((TimeToSwitchDigits() == true )){//&& meanPredictionAcc > 0.2)){//|| meanPredictionAcc > 0.5){
         timeSinceLastDigitChange = new Date()
+        IncrementUserDigitAttempts(digitToShow)
+        IncrementUserDigitAccuracy(digitToShow)
         numPredictions = 0;
         meanPredictionAcc = 0;
         SwitchDigits()
@@ -519,7 +571,7 @@ function TimeToSwitchDigits(){
     currentTime = new Date();
     differenceSinceChangeInMilliseconds = currentTime - timeSinceLastDigitChange
     differenceSinceChangeInSeconds = differenceSinceChangeInMilliseconds/1000
-    if(differenceSinceChangeInSeconds > 15){
+    if(differenceSinceChangeInSeconds > 2){
         return true
     }
 }
@@ -781,9 +833,8 @@ function HandleState3(frame){
 }
 Leap.loop(controllerOptions, function(frame){
     clear();
-    currentNumHands = frame.hands.length;
     DetermineState(frame);
-    console.log(programState)
+    console.log("Program State: ",programState)
     if(programState ==0){
         HandleState0(frame);
     }
@@ -796,5 +847,5 @@ Leap.loop(controllerOptions, function(frame){
     else if(programState==3){
         HandleState3(frame)
     }
-    previousNumHands = currentNumHands;   
+    //previousNumHands = currentNumHands;   
 });
