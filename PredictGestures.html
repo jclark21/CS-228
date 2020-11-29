@@ -1,0 +1,123 @@
+<html>
+    <head>
+        <script src="http://js.leapmotion.com/leap-0.6.3.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"></script>
+        <script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>
+        <script src="PredictGestures.js"></script>
+        <script src="prepareToDraw.js"></script>
+
+
+        <!-- Training Data for Fist-->
+        <script src="trainFistRight.js"></script>
+        <script src="trainFistLeft.js"></script>
+
+        <!-- Training Data for Digit 0-->
+        <script src="train0Bongard.js"></script>
+        <script src="train0Allison.js"></script>
+        <script src="train0He.js"></script>
+        <script src="train0Hunt.js"></script>
+        <script src="train0KLee.js"></script>
+        <script src="train0McCallion.js"></script>
+
+
+        <!-- Training Data for Digit 1-->
+        <script src="train1Davis.js"></script>
+        <script src="train1Allison.js"></script>
+        <script src="train1Bongard.js"></script>
+        <script src="train1Li.js"></script>
+        <script src="train1McLaughlin.js"></script>
+        <script src="train1Wolley.js"></script>
+        <script src="train1Hunt.js"></script>
+        <script src="train1Jimmo.js"></script>
+
+         
+        <!-- Training Data for Digit 2-->
+        <script src="train2Bongard.js"></script>
+        <script src="train2Downs.js"></script>
+        <script src="train2Jimmo.js"></script>
+        <script src="train2Jing.js"></script>
+        <script src="train2Liu.js"></script>
+        <script src="train2Neff.js"></script>
+
+        <!-- Training Data for Digit 3-->
+        <script src="train3Bongard.js"></script>
+        <script src = "train3Beattie.js"></script>
+        <script src = "train3Downs.js"></script>
+        <script src = "train3Li.js"></script>
+        <script src = "train3Luksevish.js"></script>
+        <script src = "train3Riofrio.js"></script>
+
+        <!-- Training Data for Digit 4-->
+        <script src="train4Bongard.js"></script>
+        <script src = "train4Beattie.js"></script>
+        <script src = "train4Bertschinger.js"></script>
+        <script src = "train4Faucher.js"></script>
+        <script src = "train4Kiely.js"></script>
+        <script src = "train4Liu.js"></script>
+
+
+        <!-- Training Data for Digit 5-->
+        <script src="train5Bongard.js"></script>
+        <script src="train5Bertschinger.js"></script>
+        <script src="train5Blewett.js"></script>
+        <script src="train5Faucher.js"></script>
+        <script src="train5Fekert.js"></script>
+        <script src="train5Kiely.js"></script>
+
+
+
+        <!-- Training Data for Digit 6-->
+        <script src="train6Bongard.js"></script>
+        <script src="train6Fekert.js"></script>
+        <script src="train6Fisher.js"></script>
+        <script src="train6Koretsky.js"></script>
+        <script src="train6Laquerre.js"></script>
+        <script src="train6Makovsky.js"></script>
+
+
+        <!-- Training Data for Digit 7-->
+        <script src="train7Bongard.js"></script>
+        <script src="train7Fisher.js"></script>
+        <script src="train7Laquerre.js"></script>
+        <script src="train7Manian.js"></script>
+        <script src="train7Pooprasert.js"></script>
+        <script src="train7Vega.js"></script>
+
+
+        <!-- Training Data for Digit 8-->
+        <script src="train8.js"></script>
+        <script src="train8Bongard.js"></script>
+        <script src="train8Goldman.js"></script>
+        <script src="train8Matthews.js"></script>
+        <script src="train8McCallion.js"></script>
+
+
+        <!-- Training Data for Digit 9-->
+        <script src="train9.js"></script>
+        <script src="train9Bongard.js"></script>
+        <script src="train9KLee.js"></script>
+        <script src="train9McLaughlin.js"></script>
+        <script src="train9Rice.js"></script>
+        <script src="train9Woolley.js"></script>
+
+        
+        
+
+
+
+    </head>
+    <body>
+        <main>
+           Please Sign In Below!
+           <form id="myform"></form>
+           <input id="username" type="text" name="username" placeholder="name">
+           <button onclick="return SignIn();" type="submit">Sign in</button>
+           <button onclick="return TerminateUserSession();" type="submit">Terminate Session</button>
+            </form>
+        </main>
+        <ul id="users" style = "color:white">
+            <li id="justin_name">justin</li><li id="justin_signins">1</li><li id="justin1_name">justin1</li><li id="justin1_signins">2</li><li id="justin2_name">justin2</li><li id="justin2_signins">1</li>
+        </ul>
+    </body>
+</html>
