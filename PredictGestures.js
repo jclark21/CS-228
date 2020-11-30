@@ -313,7 +313,7 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
     framesOfData.set(fingerIndex,weight,5,normalizedNextJoint[2])
 
     if(programState != 1 && programState != 0){
-        Test()
+        //Test()
     }
     
 
@@ -345,10 +345,9 @@ function DetermineState(frame){
 function TrainKNNIfNotDoneYet(trainingCompleted){
     if(trainingCompleted == false)
     {
-        Train();
+        //Train();
     }
 }
-
 function DrawImageToHelpUserPutThereHandOverDevice(){
     image(handOverDevice,0,0,window.innerWidth/2,window.innerHeight/2);
 }
@@ -437,8 +436,8 @@ function IsNewUser(username,list){
     var users = list.children;
     var usernameFound = false;
     for(i=0;i<users.length;i++){
-        console.log(users[i]);
-        console.log(users[i].innerHTML);
+        //console.log(users[i]);
+        //console.log(users[i].innerHTML);
         if(username == users[i].innerHTML){
             usernameFound = true;
         }
@@ -472,12 +471,6 @@ function CreateAttemptsAccuracyItem(username,list){
         list.appendChild(item)
     }
 }
-/* function CreateAccuracyItem(username,list){
-    var item = document.createElement('li');
-    item.id = String(username)+"_0_accuracy";
-    item.innerHTML = 0;
-    list.appendChild(item)
-} */
 function SignIn(){
     //console.log('SignIn Function Called')
     //Unordered list with an ID of 'users'
@@ -506,6 +499,7 @@ function SignIn(){
 function TerminateUserSession(){
     var list = document.getElementById('users');
     console.log(list.innerHTML);
+    programState = 0;
     return false;
 }
 function IncrementUserDigitAttempts(digit){
@@ -520,11 +514,27 @@ function IncrementUserDigitAccuracy(digit){
     //var list = document.getElementById('users');
     ID = String(username) + "_" + String(digit) + "_accuracy"
     listItem = document.getElementById(ID);
-    previousAcc = parseInt(listItem.innerHTML)
+    previousAcc = parseFloat(listItem.innerHTML)
     if(meanPredictionAcc > previousAcc){
         listItem.innerHTML = meanPredictionAcc;
     }
 }
+function DetermineCurrentUserPerformance(){
+    username = document.getElementById('username').value;
+    var listDigitAcc = [];
+    for(j = 0;j<10;j++){
+        ID = String(username) + "_" + String(j) + "_accuracy"
+        listItem = document.getElementById(ID);
+        digitAcc = parseFloat(listItem.innerHTML)
+        //console.log(digit)
+        listDigitAcc.push(digitAcc)
+    }
+    //console.log(listDigitAcc)
+    sumAcc = listDigitAcc.reduce((a,b) => a+b,0)
+    document.getElementById("sumUserAcc").innerHTML = sumAcc; 
+    console.log('Sum of Accuracy:',sumAcc)
+}
+
 function DetermineWheterToSwitchDigits(){
     if((TimeToSwitchDigits() == true )){//&& meanPredictionAcc > 0.2)){//|| meanPredictionAcc > 0.5){
         timeSinceLastDigitChange = new Date()
@@ -818,6 +828,7 @@ function HandleState2(frame){
         DrawLowerLeftPanel();
     }
     DetermineWheterToSwitchDigits();
+    DetermineCurrentUserPerformance();
     HandleFrame(frame,Test);
 }
 function HandleState3(frame){
@@ -847,5 +858,4 @@ Leap.loop(controllerOptions, function(frame){
     else if(programState==3){
         HandleState3(frame)
     }
-    //previousNumHands = currentNumHands;   
 });
