@@ -453,7 +453,7 @@ function DetermineUserRankings(){
     var list = document.getElementById('users');
     var currentUser =  document.getElementById('username').value;
     var users = list.children;
-    console.log(users.length)
+    //console.log(users.length)
     var userRankingList = [];
     var numUsers = users.length/22
     for(i=0;i<users.length;i = i+22){
@@ -652,7 +652,8 @@ function DeterminePastUserPerformance(){
     past_sumAcc = listDigitAcc.reduce((a,b) => a+b,0)
     past_sumAcc = past_sumAcc/10
     document.getElementById("past_sumUserAcc").innerHTML = past_sumAcc;
-    determinedPastPerf = true; 
+    determinedPastPerf = true;
+    EmptyUserList(userListEmpty)
     //console.log('Sum of Accuracy:',past_sumAcc)
 }
 
@@ -669,6 +670,7 @@ function EmptyUserList(userListEmpty){
 }
 
 function DetermineCurrentUserPerformance(){
+    //EmptyUserList(userListEmpty)
     username = document.getElementById('username').value;
     var listDigitAcc = [];
     for(j = 0;j<10;j++){
@@ -683,7 +685,7 @@ function DetermineCurrentUserPerformance(){
     sumAcc = sumAcc/10
     document.getElementById("sumUserAcc").innerHTML = sumAcc;
 
-    DisplaySessionPerformanceVisualization();
+    //DisplaySessionPerformanceVisualization();
     //console.log('Sum of Accuracy:',sumAcc)
 }
 
@@ -699,27 +701,30 @@ function DetermineWheterToSwitchDigits(){
 }
 
 function DisplaySessionPerformanceVisualization(){
+    console.log(sumAcc)
     if(past_sumAcc == 0){
-        image(yellow_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        image(addition,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
     }
     else{
-    ratio = sumAcc/past_sumAcc
-    console.log(ratio)
-    if(ratio >=3){
-    image(green_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
-    }
-    else if(1.1<=ratio<3){
-    image(limegreen_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
-    }
-    else if( 0.9 <= ratio < 1.1){
-    image(yellow_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
-    }
-    else if(0.5<=ratio<0.9){
-    image(redorange_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
-    }
-    else if(ratio < 0.5){
-    image(red_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
-    }
+        ratio = (sumAcc+0.001)/(past_sumAcc)
+        ratio = parseFloat(ratio)
+        ratio = ratio.toFixed(2)
+        console.log('Ratio',ratio)
+        if(ratio >=3){
+            image(green_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        }
+        else if(1.1< ratio<3){
+            image(limegreen_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        }
+        //if(0.9 <= ratio < 1.1){
+        //    image(yellow_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        //}
+        else if(0.5< ratio<0.9){
+            image(orange_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        }
+        else if(ratio < 0.5){
+            image(red_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        }
 }
 }
 function SwitchDigits(){
@@ -1014,6 +1019,7 @@ function HandleState2(frame){
         //DrawLowerLeftPanel();
     }
     DetermineCurrentUserPerformance();
+    DisplaySessionPerformanceVisualization();
     DetermineUserRankings();
 
     //Put Determine State above Function Calls
