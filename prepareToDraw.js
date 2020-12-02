@@ -18,6 +18,13 @@ var fifteen;
 var sixteen;
 var seventeen;
 var eighteen;
+
+var green_face;
+var limegreen_face;
+var yellow_face;
+var orange_face;
+var redorange_face;
+var red_face;
 function setup() {
     createCanvas(window.innerWidth,window.innerHeight);
     handOverDevice = loadImage('https://i.postimg.cc/tCxQ12cv/hand-over-device.jpg');
@@ -61,4 +68,11 @@ function setup() {
 
      addition = loadImage('https://i.postimg.cc/rwH4qMj7/addition.png');
      subtraction = loadImage('https://i.postimg.cc/rmXttjvJ/subtraction.png');
+
+    green_face = loadImage('https://i.postimg.cc/j2kZNPQV/green-face.png');
+    limegreen_face= loadImage('https://i.postimg.cc/CLzv0rSw/lime-green-face.png');
+    yellow_face= loadImage('https://i.postimg.cc/NMd4qmny/yellow-face.png');
+    orange_face= loadImage('https://i.postimg.cc/Z5NVB9Wg/orange-face.png');
+    redorange_face= loadImage('https://i.postimg.cc/XqXgVXMs/red-orange-face.png');
+    red_face= loadImage('https://i.postimg.cc/Wpfn5mrC/red-face.png');
 }
