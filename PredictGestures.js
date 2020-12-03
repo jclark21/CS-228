@@ -27,14 +27,17 @@ function Train()
         ///////////////////////////////////////
         // TRAINING FOR FIRST //
         knnClassifier.addExample(trainFistRight.pick(null,null,null,i).flatten().tolist(),10)
-        //knnClassifier.addExample(trainFistLeft.pick(null,null,null,i).flatten().tolist(),10)
-        trainFistLeft = MirrorHand(trainFistRight)
         knnClassifier.addExample(trainFistLeft.pick(null,null,null,i).flatten().tolist(),10)
+        
+        knnClassifier.addExample(trainThumbUpLeft.pick(null,null,null,i).flatten().tolist(),11)
+
+        //trainFistLeft = MirrorHand(trainFistRight)
+        //knnClassifier.addExample(trainFistLeft.pick(null,null,null,i).flatten().tolist(),10)
         //////////////////////////////////////////
         // TRAINING FOR 0 DIGIT //
         knnClassifier.addExample(train0.pick(null,null,null,i).flatten().tolist(),0)
-        train0Left = MirrorHand(train0)
-        knnClassifier.addExample(train0Left.pick(null,null,null,i).flatten().tolist(),0)
+        //train0Left = MirrorHand(train0)
+        //knnClassifier.addExample(train0Left.pick(null,null,null,i).flatten().tolist(),0)
 
         
         knnClassifier.addExample(train0Allison.pick(null,null,null,i).flatten().tolist(),0)
@@ -53,6 +56,7 @@ function Train()
         knnClassifier.addExample(train1Allison.pick(null,null,null,i).flatten().tolist(),1)
         knnClassifier.addExample(train1Bongard.pick(null,null,null,i).flatten().tolist(),1)
         knnClassifier.addExample(train1Li.pick(null,null,null,i).flatten().tolist(),1)
+        knnClassifier.addExample(train1Left.pick(null,null,null,i).flatten().tolist(),1)
         // knnClassifier.addExample(train1McLaughlin.pick(null,null,null,i).flatten().tolist(),1)
         //knnClassifier.addExample(train1Wolley.pick(null,null,null,i).flatten().tolist(),1)
         //knnClassifier.addExample(train1Hunt.pick(null,null,null,i).flatten().tolist(),1)
@@ -65,7 +69,8 @@ function Train()
         // TRAINING FOR 2 DIGIT
         knnClassifier.addExample(train2.pick(null,null,null,i).flatten().tolist(),2)
         //knnClassifier.addExample(train2Downs.pick(null,null,null,i).flatten().tolist(),2)
-        
+        knnClassifier.addExample(train2Left.pick(null,null,null,i).flatten().tolist(),2)
+
         
         //knnClassifier.addExample(train2Jimmo.pick(null,null,null,i).flatten().tolist(),2)
         knnClassifier.addExample(train2Jing.pick(null,null,null,i).flatten().tolist(),2)
@@ -76,6 +81,7 @@ function Train()
         //////////////////////////////////////////
         // TRAINING FOR DIGIT 3 //
         knnClassifier.addExample(train3.pick(null,null,null,i).flatten().tolist(),3)
+        knnClassifier.addExample(train3Left.pick(null,null,null,i).flatten().tolist(),3)
         knnClassifier.addExample(train3Beattie.pick(null,null,null,i).flatten().tolist(),3)
         //knnClassifier.addExample(train3Downs.pick(null,null,null,i).flatten().tolist(),3)
         //knnClassifier.addExample(train3Li.pick(null,null,null,i).flatten().tolist(),3)
@@ -86,6 +92,8 @@ function Train()
         //////////////////////////////////////////
         // TRAINING FOR DIGIT 4 //
         knnClassifier.addExample(train4.pick(null,null,null,i).flatten().tolist(),4)
+        knnClassifier.addExample(train4Left.pick(null,null,null,i).flatten().tolist(),4)
+
         knnClassifier.addExample(train4Beattie.pick(null,null,null,i).flatten().tolist(),4)
         knnClassifier.addExample(train4Bertschinger.pick(null,null,null,i).flatten().tolist(),4)
         
@@ -98,7 +106,7 @@ function Train()
         //////////////////////////////////////////
         // TRAINING FOR DIGIT 5 //
         knnClassifier.addExample(train5.pick(null,null,null,i).flatten().tolist(),5)
-        train5Left = MirrorHand(train5)
+        //train5Left = MirrorHand(train5)
         knnClassifier.addExample(train5Left.pick(null,null,null,i).flatten().tolist(),5)
 
         //knnClassifier.addExample(train5Bertschinger.pick(null,null,null,i).flatten().tolist(),5)
@@ -112,6 +120,8 @@ function Train()
         //////////////////////////////////////////
         // TRAINING FOR DIGIT 6 //
         knnClassifier.addExample(train6.pick(null,null,null,i).flatten().tolist(),6)
+        knnClassifier.addExample(train6Left.pick(null,null,null,i).flatten().tolist(),6)
+
         knnClassifier.addExample(train6Fekert.pick(null,null,null,i).flatten().tolist(),6)
         //knnClassifier.addExample(train6Fisher.pick(null,null,null,i).flatten().tolist(),6)
         //knnClassifier.addExample(train6Koretsky.pick(null,null,null,i).flatten().tolist(),6)
@@ -124,7 +134,8 @@ function Train()
         //////////////////////////////////////////
         // TRAINING FOR DIGIT 7
         knnClassifier.addExample(train7.pick(null,null,null,i).flatten().tolist(),7)
-        
+        knnClassifier.addExample(train7Left.pick(null,null,null,i).flatten().tolist(),6)
+
         //knnClassifier.addExample(train7Fisher.pick(null,null,null,i).flatten().tolist(),7)
         //knnClassifier.addExample(train7Laquerre.pick(null,null,null,i).flatten().tolist(),7)
         //knnClassifier.addExample(train7Manian.pick(null,null,null,i).flatten().tolist(),7)
@@ -138,6 +149,8 @@ function Train()
         // TRAINING FOR DIGIT 8
         //knnClassifier.addExample(train8.pick(null,null,null,i).flatten().tolist(),8)
         knnClassifier.addExample(train8Bongard.pick(null,null,null,i).flatten().tolist(),8)
+        knnClassifier.addExample(train8Left.pick(null,null,null,i).flatten().tolist(),6)
+
         //knnClassifier.addExample(train8Goldman.pick(null,null,null,i).flatten().tolist(),8)
         //knnClassifier.addExample(train8Matthews.pick(null,null,null,i).flatten().tolist(),8)
         //knnClassifier.addExample(train8McCallion.pick(null,null,null,i).flatten().tolist(),8)
@@ -149,6 +162,8 @@ function Train()
         // TRAINING FOR DIGIT 9
         //knnClassifier.addExample(train9.pick(null,null,null,i).flatten().tolist(),9)
         knnClassifier.addExample(train9Bongard.pick(null,null,null,i).flatten().tolist(),9)
+        knnClassifier.addExample(train9Left.pick(null,null,null,i).flatten().tolist(),6)
+
         //knnClassifier.addExample(train9KLee.pick(null,null,null,i).flatten().tolist(),9)
         //knnClassifier.addExample(train9McLaughlin.pick(null,null,null,i).flatten().tolist(),9)
         //knnClassifier.addExample(train9Rice.pick(null,null,null,i).flatten().tolist(),9)
@@ -799,36 +814,36 @@ function DrawLowerRightPanel(){
         image(nineDigit,window.innerWidth/2,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
     }
 }
-function DrawLowerLeftPanel(){
+function DrawUpperRightPanel(){
     if(digitToShow == 0){
-        image(zero,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+        image(zero,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
     }
     if(digitToShow == 1){
-        image(one,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+        image(one,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
     }
     if(digitToShow == 2){
-        image(two,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+        image(two,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
     }
     if(digitToShow == 3){
-        image(three,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+        image(three,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
     }
     if(digitToShow == 4){
-        image(four,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+        image(four,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
     }
     if(digitToShow == 5){
-        image(five,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+        image(five,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
     }
     if(digitToShow == 6){
-        image(six,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+        image(six,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
     }
     if(digitToShow == 7){
-        image(seven,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+        image(seven,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
     }
     if(digitToShow == 8){
-        image(eight,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+        image(eight,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
     }
     if(digitToShow == 9){
-        image(nine,0,window.innerHeight/2,window.innerWidth/2,window.innerHeight/2);
+        image(nine,window.innerWidth/2,0,window.innerWidth/2,window.innerHeight/2);
     }
 }
 function DetermineWheterToSwitchEquations(){
@@ -1012,11 +1027,11 @@ function HandleState2(frame){
     DeterminePastUserPerformanceIfNotDone(determinedPastPerf);
     //EmptyUserList(userListEmpty);
     if(meanPredictionAcc > 0.10){
-        //DrawLowerLeftPanel();
+        DrawUpperRightPanel();
     }
     else{
         DrawLowerRightPanel();
-        //DrawLowerLeftPanel();
+        DrawUpperRightPanel();
     }
     DetermineCurrentUserPerformance();
     DisplaySessionPerformanceVisualization();
