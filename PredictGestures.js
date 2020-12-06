@@ -18,6 +18,7 @@ var userListEmpty = false;
 var sumAcc = 0;
 var past_sumAcc = 0;
 var ratio = 0;
+var testingHand = 2;
 
 
 function Train()
@@ -275,8 +276,9 @@ function MirrorHand(trainingData)
     }
     return trainingData
 }
-function Test()
+function Test(handNum)
 {
+    testingHand = handNum;
     features = framesOfData.pick(null,null,null);
     CenterData()
     features = features.flatten();
@@ -289,10 +291,15 @@ function GotResults(err,result)
     numPredictions += 1;
     meanPredictionAcc = (((numPredictions-1)*meanPredictionAcc) + (parseInt(result.label) == digitToShow))/numPredictions
     //console.log(testingSampleIndex,parseInt(result.label));
-    console.log(numPredictions,'Mean Prediction Accuracy: ',meanPredictionAcc,parseInt(result.label))
+    console.log(testingHand,numPredictions,'Mean Prediction Accuracy: ',meanPredictionAcc,parseInt(result.label))
     //console.log(parseInt(result.label))
     //console.log(parseInt(result.label));
-    
+    if(parseInt(result.label) == 10 && testingHand == 1){
+        console.log('Secondary Hand Fist')
+    }
+    if(parseInt(result.label) == 11 && testingHand == 1){
+        console.log('Secondary Hand Thumbs Up')
+    }
     
     //testingSampleIndex = testingSampleIndex+1;
     //if(testingSampleIndex>=numSamples)
@@ -301,26 +308,38 @@ function GotResults(err,result)
     //}
 }
 function HandleFrame(frame,Test){
-    if(frame.hands.length>=1)
+    if(frame.hands.length==1)
     {
      numHands = frame.hands.length
      hand = frame.hands[0];
      var interactionBox = frame.interactionBox;
-     HandleHand(hand,interactionBox,Test)
+     HandleHand(hand,interactionBox,Test,0)
+    }
+    else if(frame.hands.length==2)
+    {
+     numHands = frame.hands.length
+     hand = frame.hands[0];
+     hand2 = frame.hands[1];
+     var interactionBox = frame.interactionBox;
+     //testingHand = 0;
+     HandleHand(hand,interactionBox,Test,0)
+     //testingHand = 1;
+     HandleHand(hand2,interactionBox,Test,1)
     }
 }
-function HandleHand(hand,interactionBox,Test)
+function HandleHand(hand,interactionBox,Test,handNum)
 {
+    //console.log(handNum)
     fingers  = hand.fingers;
     for (var i = 3;i>-1;i--)
         {
             for (var j = 0;j<fingers.length;j++)
             {
-                HandleBone(fingers[j].bones[i],i,j,interactionBox,Test)
+                HandleBone(fingers[j].bones[i],i,j,interactionBox,Test,handNum)
             }
         }
 }
-function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
+function HandleBone(bone,weight,fingerIndex,interactionBox,Test,handNum)
 {
     normalizedPrevJoint = interactionBox.normalizePoint(bone.prevJoint,true)
     normalizedNextJoint = interactionBox.normalizePoint(bone.nextJoint,true)
@@ -333,7 +352,8 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test)
     framesOfData.set(fingerIndex,weight,5,normalizedNextJoint[2])
 
     if(programState != 1 && programState != 0){
-        Test()
+        //console.log(handNum)
+        Test(handNum)
     }
     
 
@@ -355,12 +375,12 @@ function DetermineState(frame){
     else if(frame.hands.length >= 1 && HandIsUncentered() == true){
         programState = 1;
     }
-    else if (frame.hands.length == 1 && HandIsUncentered() == false){
+    else if (frame.hands.length >= 1 && HandIsUncentered() == false){
         programState=2;
     }
-    else if(frame.hands.length == 2 && HandIsUncentered() == false){
-        programState = 3;
-    }
+    //else if(frame.hands.length == 2 && HandIsUncentered() == false){
+    //    programState = 3;
+    //}
 }
 function TrainKNNIfNotDoneYet(trainingCompleted){
     if(trainingCompleted == false)
