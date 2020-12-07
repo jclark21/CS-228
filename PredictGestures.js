@@ -10,6 +10,7 @@ var programState = 0;
 var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
 var timeSinceSecondaryHandChange = new Date();
+var timeSinceSecondaryHandDigChange = new Date();
 var firstVar = 2;
 var secondVar = 3;
 var answer = 5;
@@ -299,17 +300,17 @@ function GotResults(err,result)
     //console.log(parseInt(result.label));
     if(parseInt(result.label) == 10 && testingHand == 1){
         console.log('Secondary Hand Fist')
-        if(programState == 2){
+        if(programState == 2 && TimeToSwitchDigWithSecondary() == true){
             numPredictions = 0;
             meanPredictionAcc = 0;
             SwitchDigits()
         }
-        else if(programState == 3){
+        else if(programState == 3 && TimeToSwitchDigWithSecondary() == true){
             numPredictions = 0;
             meanPredictionAcc = 0;
             firstVar,sign,secondVar,digitToShow = GenerateEquation();
         }
-        else if(programState == 4){
+        else if(programState == 4 && TimeToSwitchDigWithSecondary() == true){
             numPredictions = 0;
             meanPredictionAcc = 0;
             firstVar,sign,digitToShow,answer = GenerateEquation();
@@ -397,7 +398,7 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test,handNum)
     color_shade = (4-weight)*50;
 
     //stroke(((4-weight)*60)*(1-meanPredictionAcc),((4-weight)*60)*meanPredictionAcc,0);
-    stroke(((4-weight)*60)*(1-(meanPredictionAcc+0.2)),((4-weight)*60)*(meanPredictionAcc+0.2),0);
+    stroke(((4-weight)*60)*(1-(meanPredictionAcc)),((4-weight)*60)*(meanPredictionAcc+0.2),0);
     line(xb,yb,xt,yt);
 }
 function DetermineState(frame){
@@ -775,22 +776,22 @@ function DisplaySessionPerformanceVisualization(){
         ratio = (sumAcc+0.001)/(past_sumAcc)
         ratio = parseFloat(ratio)
         ratio = ratio.toFixed(2)
-        console.log('Ratio',ratio)
+        //console.log('Ratio',ratio)
         //console.log(ratio < )
         if(ratio < 0.5){
-            image(red_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+            image(red_face,0,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
         }
         else if(ratio >= .5 && ratio <0.9){
-            image(orange_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+            image(orange_face,0,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
         }
         else if(ratio >= 0.9 && ratio < 1.1){
-            image(yellow_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+            image(yellow_face,0,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
         }
-        else if(ratio >=3){
-           image(green_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        else if(ratio >=2){
+           image(green_face,0,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
         }
-        else if(ratio >= 1.1 && ratio < 3){
-           image(limegreen_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        else if(ratio >= 1.1 && ratio < 2){
+           image(limegreen_face,0,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
         }
     }
 }
@@ -829,6 +830,18 @@ function SwitchDigits(){
 function TimeToSwitchWithSecondary(){
     time = new Date()
     differenceSinceChangeInMilliseconds = time - timeSinceSecondaryHandChange
+    differenceSinceChangeInSeconds = differenceSinceChangeInMilliseconds/1000
+    if(differenceSinceChangeInSeconds > 5){
+        return true
+    }
+    else{
+        return false
+    }
+}
+
+function TimeToSwitchDigWithSecondary(){
+    time = new Date()
+    differenceSinceChangeInMilliseconds = time - timeSinceSecondaryHandDigChange
     differenceSinceChangeInSeconds = differenceSinceChangeInMilliseconds/1000
     if(differenceSinceChangeInSeconds > 5){
         return true

@@ -26,6 +26,10 @@ var orange_face;
 var redorange_face;
 var red_face;
 
+var first;
+var second;
+var third;
+
 var x_pic;
 var y_pic;
 var equals;
@@ -85,4 +89,7 @@ function setup() {
     y_pic = loadImage('https://i.postimg.cc/13CJQhpP/y.png');
     question  = loadImage('https://i.postimg.cc/15yHV5Bs/question.png');
     equals = loadImage('https://i.postimg.cc/Bv1Fjd1x/equals.png');
+    first = loadImage('https://i.postimg.cc/BnmYfqtZ/first.png');
+    second = loadImage('https://i.postimg.cc/nhrK7qcZ/second.png');
+    third = loadImage('https://i.postimg.cc/yYY040R9/third.png');
 }
