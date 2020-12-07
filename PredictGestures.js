@@ -753,7 +753,7 @@ function DetermineCurrentUserPerformance(){
     sumAcc = sumAcc/10
     document.getElementById("sumUserAcc").innerHTML = sumAcc;
 
-    //DisplaySessionPerformanceVisualization();
+    DisplaySessionPerformanceVisualization();
     //console.log('Sum of Accuracy:',sumAcc)
 }
 function DetermineWheterToSwitchDigits(){
@@ -776,19 +776,20 @@ function DisplaySessionPerformanceVisualization(){
         ratio = parseFloat(ratio)
         ratio = ratio.toFixed(2)
         console.log('Ratio',ratio)
+        //console.log(ratio < )
         if(ratio < 0.5){
             image(red_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
         }
-        if(0.5<= ratio<0.9){
+        else if(ratio >= .5 && ratio <0.9){
             image(orange_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
         }
-        if(0.9 <= ratio < 1.1){
+        else if(ratio >= 0.9 && ratio < 1.1){
             image(yellow_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
         }
-        if(ratio >=3){
+        else if(ratio >=3){
            image(green_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
         }
-        if(1.1<= ratio<3){
+        else if(ratio >= 1.1 && ratio < 3){
            image(limegreen_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
         }
     }
@@ -1217,7 +1218,7 @@ function HandleState2(frame){
         DrawUpperRightPanel();
     }
     DetermineCurrentUserPerformance();
-    DisplaySessionPerformanceVisualization();
+    //DisplaySessionPerformanceVisualization();
     DetermineUserRankings();
 
     //Put Determine State above Function Calls
@@ -1235,7 +1236,7 @@ function HandleState3(frame){
         DrawLowerRightPanel();
     }
     DetermineCurrentUserPerformance();
-    DisplaySessionPerformanceVisualization();
+    //DisplaySessionPerformanceVisualization();
     DetermineUserRankings();
     HandleFrame(frame,Test)
 
@@ -1253,7 +1254,7 @@ function HandleState4(frame){
         DrawLowerRightPanel();
     }
     DetermineCurrentUserPerformance();
-    DisplaySessionPerformanceVisualization();
+    //DisplaySessionPerformanceVisualization();
     DetermineUserRankings();
     HandleFrame(frame,Test)
 }
