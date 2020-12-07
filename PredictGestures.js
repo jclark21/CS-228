@@ -24,6 +24,10 @@ var testingHand = 2;
 var mathIntMode = false;
 var mathHardMode = false;
 var runningDigList = [];
+var runningEqList = [];
+var EqAttList = [];
+
+
 
 function Train()
 {
@@ -401,7 +405,7 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test,handNum)
     color_shade = (4-weight)*50;
 
     //stroke(((4-weight)*60)*(1-meanPredictionAcc),((4-weight)*60)*meanPredictionAcc,0);
-    stroke(((4-weight)*60)*(1-(meanPredictionAcc)),((4-weight)*60)*(meanPredictionAcc+0.2),0);
+    stroke(((4-weight)*60)*(1-(meanPredictionAcc)),((4-weight)*60)*(meanPredictionAcc+0.4),0);
     line(xb,yb,xt,yt);
 }
 function DetermineState(frame){
@@ -595,11 +599,11 @@ function DetermineUserRankings(){
             image(ribbon,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/5);
         }
         document.getElementById("rank_1_user").innerHTML = rank_1_user;
-        document.getElementById("rank_1_perf").innerHTML = rank_1_perf;
+        document.getElementById("rank_1_perf").innerHTML = rank_1_perf.toFixed(3);
         document.getElementById("rank_2_user").innerHTML = rank_2_user;
-        document.getElementById("rank_2_perf").innerHTML = rank_2_perf;
+        document.getElementById("rank_2_perf").innerHTML = rank_2_perf.toFixed(3);
         document.getElementById("rank_3_user").innerHTML = rank_3_user;
-        document.getElementById("rank_3_perf").innerHTML = rank_3_perf;
+        document.getElementById("rank_3_perf").innerHTML = rank_3_perf.toFixed(3);
     }
 }
 function CalculateAverageDigitPerformance(listDigitAcc)
@@ -712,7 +716,7 @@ function DeterminePastUserPerformance(){
     //console.log(listDigitAcc)
     past_sumAcc = listDigitAcc.reduce((a,b) => a+b,0)
     past_sumAcc = past_sumAcc/10
-    document.getElementById("past_sumUserAcc").innerHTML = past_sumAcc;
+    document.getElementById("past_sumUserAcc").innerHTML = past_sumAcc.toFixed(3);
     determinedPastPerf = true;
     EmptyUserList(userListEmpty)
     //console.log('Sum of Accuracy:',past_sumAcc)
@@ -742,13 +746,13 @@ function DetermineCurrentUserPerformance(){
     //console.log(listDigitAcc)
     sumAcc = listDigitAcc.reduce((a,b) => a+b,0)
     sumAcc = sumAcc/10
-    document.getElementById("sumUserAcc").innerHTML = sumAcc;
+    document.getElementById("sumUserAcc").innerHTML = sumAcc.toFixed(3);
 
     DisplaySessionPerformanceVisualization();
     //console.log('Sum of Accuracy:',sumAcc)
 }
 function DetermineWheterToSwitchDigits(){
-    if((TimeToSwitchDigits() == true )){//&& meanPredictionAcc > 0.2)){//|| meanPredictionAcc > 0.5){
+    if(TimeToSwitchDigits() == true || meanPredictionAcc > 0.2){//|| meanPredictionAcc > 0.5){
         timeSinceLastDigitChange = new Date()
         IncrementUserDigitAttempts(digitToShow)
         IncrementUserDigitAccuracy(digitToShow)
@@ -916,10 +920,15 @@ function DrawUpperRightPanel(){
     }
 }
 function DetermineWheterToSwitchEquations(){
-    if(TimeToSwitchDigits() == true){
+    if(TimeToSwitchDigits() == true|| meanPredictionAcc > 0.2){
         timeSinceLastDigitChange = new Date()
         IncrementUserDigitAttempts(digitToShow)
         IncrementUserDigitAccuracy(digitToShow)
+        if(meanPredictionAcc>0){
+            runningDigList.push(1)
+        }
+        EqAttList.push(1)
+
         numPredictions = 0;
         meanPredictionAcc = 0;
         return true;
@@ -1196,9 +1205,13 @@ function DeterminePastUserPerformanceIfNotDone(determinedPastPerf){
 }
 function DetermineWheterToSwitchStates(){
     console.log('Running List Length',runningDigList.length)
-    if(runningDigList.length == 9){
+    if(programState == 2 && runningDigList.length == 9){
         mathIntMode = true;
         programState = 3;
+    }
+    else if(programState == 3 && (runningEqList.length + 2 <EqAttList.length)){
+        mathIntMode = false;
+        programState = 2;
     }
 }
 function HandleState0(frame){
