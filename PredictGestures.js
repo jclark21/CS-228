@@ -9,6 +9,7 @@ var meanPredictionAcc = 0;
 var programState = 0;
 var digitToShow = 0;
 var timeSinceLastDigitChange = new Date();
+var timeSinceSecondaryHandChange = new Date();
 var firstVar = 2;
 var secondVar = 3;
 var answer = 5;
@@ -19,6 +20,8 @@ var sumAcc = 0;
 var past_sumAcc = 0;
 var ratio = 0;
 var testingHand = 2;
+var mathIntMode = false;
+var mathHardMode = false;
 
 
 function Train()
@@ -296,16 +299,43 @@ function GotResults(err,result)
     //console.log(parseInt(result.label));
     if(parseInt(result.label) == 10 && testingHand == 1){
         console.log('Secondary Hand Fist')
+        if(programState == 2){
+            numPredictions = 0;
+            meanPredictionAcc = 0;
+            SwitchDigits()
+        }
+        else if(programState == 3){
+            numPredictions = 0;
+            meanPredictionAcc = 0;
+            firstVar,sign,secondVar,digitToShow = GenerateEquation();
+        }
+        else if(programState == 4){
+            numPredictions = 0;
+            meanPredictionAcc = 0;
+            firstVar,sign,digitToShow,answer = GenerateEquation();
+        }
     }
     if(parseInt(result.label) == 11 && testingHand == 1){
         console.log('Secondary Hand Thumbs Up')
+        if(programState == 2 && TimeToSwitchWithSecondary() ==true){
+            timeSinceSecondaryHandChange = new Date();
+            mathIntMode = true;
+            programState = 3;
+        }
+        else if(programState == 3 && TimeToSwitchWithSecondary() ==true){
+            timeSinceSecondaryHandChange = new Date();
+            mathHardMode = true;
+            mathIntMode = false;
+            programState = 4;
+        }
+        else if(programState == 4 && TimeToSwitchWithSecondary() ==true){
+            timeSinceSecondaryHandChange = new Date();
+            mathHardMode = false;
+            mathIntMode = false;
+            programState = 2;
+        }
+
     }
-    
-    //testingSampleIndex = testingSampleIndex+1;
-    //if(testingSampleIndex>=numSamples)
-    //{
-    //    testingSampleIndex = 0;
-    //}
 }
 function HandleFrame(frame,Test){
     if(frame.hands.length==1)
@@ -362,10 +392,12 @@ function HandleBone(bone,weight,fingerIndex,interactionBox,Test,handNum)
     var xt = window.innerWidth/2 * normalizedNextJoint[0];
     var yt = window.innerHeight/2 * (1 - normalizedNextJoint[1]);
 
-    strokeWeight(10-(2*weight));
+    //strokeWeight(10-(2*weight));
+    strokeWeight(3*(10-(2*weight)));
     color_shade = (4-weight)*50;
 
-    stroke(((4-weight)*60)*(1-meanPredictionAcc),((4-weight)*60)*meanPredictionAcc,0);
+    //stroke(((4-weight)*60)*(1-meanPredictionAcc),((4-weight)*60)*meanPredictionAcc,0);
+    stroke(((4-weight)*60)*(1-(meanPredictionAcc+0.2)),((4-weight)*60)*(meanPredictionAcc+0.2),0);
     line(xb,yb,xt,yt);
 }
 function DetermineState(frame){
@@ -375,12 +407,15 @@ function DetermineState(frame){
     else if(frame.hands.length >= 1 && HandIsUncentered() == true){
         programState = 1;
     }
-    else if (frame.hands.length >= 1 && HandIsUncentered() == false){
+    else if (frame.hands.length >= 1 && HandIsUncentered() == false && mathIntMode == false && mathHardMode == false){
         programState=2;
     }
-    //else if(frame.hands.length == 2 && HandIsUncentered() == false){
-    //    programState = 3;
-    //}
+    else if(frame.hands.length >= 1 && HandIsUncentered() == false && mathIntMode == true && mathHardMode == false){
+        programState = 3;
+    }
+    else if(frame.hands.length >= 1 && HandIsUncentered() == false && mathIntMode == false && mathHardMode == true){
+        programState = 4;
+    }
 }
 function TrainKNNIfNotDoneYet(trainingCompleted){
     if(trainingCompleted == false)
@@ -691,7 +726,6 @@ function DeterminePastUserPerformance(){
     EmptyUserList(userListEmpty)
     //console.log('Sum of Accuracy:',past_sumAcc)
 }
-
 function EmptyUserList(userListEmpty){
     if(userListEmpty == false){
         username = document.getElementById('username').value;
@@ -703,7 +737,6 @@ function EmptyUserList(userListEmpty){
     userListEmpty = true;
     }
 }
-
 function DetermineCurrentUserPerformance(){
     //EmptyUserList(userListEmpty)
     username = document.getElementById('username').value;
@@ -723,7 +756,6 @@ function DetermineCurrentUserPerformance(){
     //DisplaySessionPerformanceVisualization();
     //console.log('Sum of Accuracy:',sumAcc)
 }
-
 function DetermineWheterToSwitchDigits(){
     if((TimeToSwitchDigits() == true )){//&& meanPredictionAcc > 0.2)){//|| meanPredictionAcc > 0.5){
         timeSinceLastDigitChange = new Date()
@@ -734,9 +766,8 @@ function DetermineWheterToSwitchDigits(){
         SwitchDigits()
     }
 }
-
 function DisplaySessionPerformanceVisualization(){
-    console.log(sumAcc)
+    //console.log(sumAcc)
     if(past_sumAcc == 0){
         image(addition,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
     }
@@ -745,22 +776,22 @@ function DisplaySessionPerformanceVisualization(){
         ratio = parseFloat(ratio)
         ratio = ratio.toFixed(2)
         console.log('Ratio',ratio)
-        if(ratio >=3){
-            image(green_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
-        }
-        else if(1.1< ratio<3){
-            image(limegreen_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
-        }
-        //if(0.9 <= ratio < 1.1){
-        //    image(yellow_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
-        //}
-        else if(0.5< ratio<0.9){
-            image(orange_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
-        }
-        else if(ratio < 0.5){
+        if(ratio < 0.5){
             image(red_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
         }
-}
+        if(0.5<= ratio<0.9){
+            image(orange_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        }
+        if(0.9 <= ratio < 1.1){
+            image(yellow_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        }
+        if(ratio >=3){
+           image(green_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        }
+        if(1.1<= ratio<3){
+           image(limegreen_face,0,window.innerHeight*0.75,window.innerWidth/4,window.innerHeight/4);
+        }
+    }
 }
 function SwitchDigits(){
     if(digitToShow == 0){
@@ -794,11 +825,23 @@ function SwitchDigits(){
         digitToShow = 0
     }
 }
+function TimeToSwitchWithSecondary(){
+    time = new Date()
+    differenceSinceChangeInMilliseconds = time - timeSinceSecondaryHandChange
+    differenceSinceChangeInSeconds = differenceSinceChangeInMilliseconds/1000
+    if(differenceSinceChangeInSeconds > 5){
+        return true
+    }
+    else{
+        return false
+    }
+}
+
 function TimeToSwitchDigits(){
     currentTime = new Date();
     differenceSinceChangeInMilliseconds = currentTime - timeSinceLastDigitChange
     differenceSinceChangeInSeconds = differenceSinceChangeInMilliseconds/1000
-    if(differenceSinceChangeInSeconds > 2){
+    if(differenceSinceChangeInSeconds > 5){
         return true
     }
 }
@@ -869,6 +912,8 @@ function DrawUpperRightPanel(){
 function DetermineWheterToSwitchEquations(){
     if(TimeToSwitchDigits() == true){
         timeSinceLastDigitChange = new Date()
+        IncrementUserDigitAttempts(digitToShow)
+        IncrementUserDigitAccuracy(digitToShow)
         numPredictions = 0;
         meanPredictionAcc = 0;
         return true;
@@ -909,107 +954,225 @@ function GenerateEquation(){
 }
 function DrawFirstVariable(firstVar){
     if(firstVar == 0){
-        image(zero,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(zero,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 1){
-        image(one,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(one,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 2){
-        image(two,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(two,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 3){
-        image(three,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(three,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 4){
-        image(four,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(four,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 5){
-        image(five,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(five,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 6){
-        image(six,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(six,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 7){
-        image(seven,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(seven,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 8){
-        image(eight,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(eight,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 9){
-        image(nine,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(nine,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 10){
-        image(ten,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(ten,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 11){
-        image(eleven,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(eleven,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 12){
-        image(twelve,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(twelve,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 13){
-        image(thirteen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(thirteen,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 14){
-        image(fourteen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(fourteen,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 15){
-        image(fifteen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(fifteen,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 16){
-        image(sixteen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(sixteen,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 17){
-        image(seventeen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(seventeen,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(firstVar == 18){
-        image(eighteen,0,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(eighteen,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/2);
     }
 }
 function DrawSign(sign){
     if(sign == 0){
-        image(addition,window.innerWidth/6,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(addition,(4*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
     else if(sign == 1){
-        image(subtraction,window.innerWidth/6,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(subtraction,(4*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
 }
 function DrawSecondVariable(secondVar){
     if(secondVar == 0){
-        image(zero,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(zero,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(secondVar == 1){
-        image(one,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(one,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(secondVar == 2){
-        image(two,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(two,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(secondVar == 3){
-        image(three,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(three,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(secondVar == 4){
-        image(four,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(four,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(secondVar == 5){
-        image(five,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(five,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(secondVar == 6){
-        image(six,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(six,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(secondVar == 7){
-        image(seven,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(seven,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(secondVar == 8){
-        image(eight,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(eight,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
     if(secondVar == 9){
-        image(nine,window.innerWidth/3,window.innerHeight/2,window.innerWidth/6,window.innerHeight/2);
+        image(nine,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/2);
     }
 }
 function DrawEqLowerLeftPanel(firstVar,sign,secondVar){
     DrawFirstVariable(firstVar);
     DrawSign(sign);
     DrawSecondVariable(secondVar);
+}
+function DrawVarEqUpperRightPanel(){
+    DrawFirstVarEq(firstVar);
+    DrawVarSign(sign);
+    DrawVar();
+    DrawEquals();
+    DrawAnswer(answer);
+    DrawVarEquals();
+}
+function DrawFirstVarEq(firstVar){
+    if(firstVar == 0){
+        image(zero,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 1){
+        image(one,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 2){
+        image(two,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 3){
+        image(three,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 4){
+        image(four,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 5){
+        image(five,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 6){
+        image(six,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 7){
+        image(seven,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 8){
+        image(eight,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 9){
+        image(nine,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 10){
+        image(ten,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 11){
+        image(eleven,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 12){
+        image(twelve,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 13){
+        image(thirteen,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 14){
+        image(fourteen,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 15){
+        image(fifteen,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 16){
+        image(sixteen,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 17){
+        image(seventeen,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    if(firstVar == 18){
+        image(eighteen,window.innerWidth/2,0,window.innerWidth/12,window.innerHeight/4);
+    }
+}
+function DrawVarSign(sign){
+    if(sign == 0){
+        image(addition,(7*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    else if(sign == 1){
+        image(subtraction,(7*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+}
+function DrawVar(){
+    image(y_pic,(8*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+}
+function DrawEquals(){
+    image(equals,(9*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+}
+function DrawAnswer(answer){
+    if(answer == 0){
+        image(zero,(10*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    else if(answer == 1){
+        image(one,(10*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    else if(answer == 2){
+        image(two,(10*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    else if(answer == 3){
+        image(three,(10*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    else if(answer == 4){
+        image(four,(10*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    else if(answer == 5){
+        image(five,(10*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    else if(answer == 6){
+        image(six,(10*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    else if(answer == 7){
+        image(seven,(10*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    else if(answer == 8){
+        image(eight,(10*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+    else if(answer == 9){
+        image(nine,(10*window.innerWidth)/12,0,window.innerWidth/12,window.innerHeight/4);
+    }
+}
+function DrawVarEquals(){
+    image(y_pic,(6*window.innerWidth)/12,window.innerHeight/4,window.innerWidth/12,window.innerHeight/4);
+    image(equals,(7*window.innerWidth)/12,window.innerHeight/4,window.innerWidth/12,window.innerHeight/4);
+    image(question,(8*window.innerWidth)/12,window.innerHeight/4,window.innerWidth/12,window.innerHeight/4);
 }
 function DeterminePastUserPerformanceIfNotDone(determinedPastPerf){
     if(determinedPastPerf == false){
@@ -1069,9 +1232,30 @@ function HandleState3(frame){
     }
     else{
         DrawEqLowerLeftPanel(firstVar,sign,secondVar);
+        DrawLowerRightPanel();
     }
+    DetermineCurrentUserPerformance();
+    DisplaySessionPerformanceVisualization();
+    DetermineUserRankings();
     HandleFrame(frame,Test)
 
+}
+function HandleState4(frame){
+    if(DetermineWheterToSwitchEquations() == true){
+        firstVar,sign,secondVar,answer = GenerateEquation();
+        console.log(secondVar)
+        digitToShow = parseFloat(secondVar)
+        DrawVarEqUpperRightPanel(firstVar,sign,answer);
+        DrawLowerRightPanel();
+    }
+    else{
+        DrawVarEqUpperRightPanel(firstVar,sign,answer);
+        DrawLowerRightPanel();
+    }
+    DetermineCurrentUserPerformance();
+    DisplaySessionPerformanceVisualization();
+    DetermineUserRankings();
+    HandleFrame(frame,Test)
 }
 Leap.loop(controllerOptions, function(frame){
     clear();
@@ -1088,5 +1272,8 @@ Leap.loop(controllerOptions, function(frame){
     }
     else if(programState==3){
         HandleState3(frame)
+    }
+    else if(programState == 4){
+        HandleState4(frame)
     }
 });

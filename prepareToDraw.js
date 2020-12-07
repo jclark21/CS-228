@@ -25,6 +25,11 @@ var yellow_face;
 var orange_face;
 var redorange_face;
 var red_face;
+
+var x_pic;
+var y_pic;
+var equals;
+var question;
 function setup() {
     createCanvas(window.innerWidth,window.innerHeight);
     handOverDevice = loadImage('https://i.postimg.cc/tCxQ12cv/hand-over-device.jpg');
@@ -66,8 +71,8 @@ function setup() {
      seventeen= loadImage('https://i.postimg.cc/T2yPgFVJ/17-pic.png');
      eighteen= loadImage('https://i.postimg.cc/tCWCm6m1/18-pic.png');
 
-     addition = loadImage('https://i.postimg.cc/rwH4qMj7/addition.png');
-     subtraction = loadImage('https://i.postimg.cc/rmXttjvJ/subtraction.png');
+    addition = loadImage('https://i.postimg.cc/rwH4qMj7/addition.png');
+    subtraction = loadImage('https://i.postimg.cc/rmXttjvJ/subtraction.png');
 
     green_face = loadImage('https://i.postimg.cc/j2kZNPQV/green-face.png');
     limegreen_face= loadImage('https://i.postimg.cc/CLzv0rSw/lime-green-face.png');
@@ -75,4 +80,9 @@ function setup() {
     orange_face= loadImage('https://i.postimg.cc/Z5NVB9Wg/orange-face.png');
     redorange_face= loadImage('https://i.postimg.cc/XqXgVXMs/red-orange-face.png');
     red_face= loadImage('https://i.postimg.cc/Wpfn5mrC/red-face.png');
+
+    x_pic = loadImage('https://i.postimg.cc/c4cFF8Cv/x.png');
+    y_pic = loadImage('https://i.postimg.cc/13CJQhpP/y.png');
+    question  = loadImage('https://i.postimg.cc/15yHV5Bs/question.png');
+    equals = loadImage('https://i.postimg.cc/Bv1Fjd1x/equals.png');
 }
