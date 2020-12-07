@@ -27,13 +27,17 @@ var redorange_face;
 var red_face;
 
 var first;
-var second;
+var second_place;
 var third;
-
+var hand_fist;
+var hand_thumb;
 var x_pic;
 var y_pic;
 var equals;
 var question;
+var skip;
+var change;
+var ribbon;
 function setup() {
     createCanvas(window.innerWidth,window.innerHeight);
     handOverDevice = loadImage('https://i.postimg.cc/tCxQ12cv/hand-over-device.jpg');
@@ -90,6 +94,12 @@ function setup() {
     question  = loadImage('https://i.postimg.cc/15yHV5Bs/question.png');
     equals = loadImage('https://i.postimg.cc/Bv1Fjd1x/equals.png');
     first = loadImage('https://i.postimg.cc/BnmYfqtZ/first.png');
-    second = loadImage('https://i.postimg.cc/nhrK7qcZ/second.png');
+    second_place = loadImage('https://i.postimg.cc/nhrK7qcZ/second.png');
     third = loadImage('https://i.postimg.cc/yYY040R9/third.png');
+
+    skip = loadImage('https://i.postimg.cc/VLnTbQvm/skip.png');
+    change = loadImage('https://i.postimg.cc/kgypfQWH/change.png');
+    ribbon = loadImage('https://i.postimg.cc/FHhPdYwV/ribbon.png');
+    hand_fist =loadImage('https://i.postimg.cc/NfCyTVzC/handwithfist.jpg');
+    hand_thumb = loadImage('https://i.postimg.cc/Jn8tMWs0/handwiththumb.jpg');
 }

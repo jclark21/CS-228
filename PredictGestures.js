@@ -583,10 +583,13 @@ function DetermineUserRankings(){
             image(first,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
         }
         else if(currentUser == rank_2_user){
-            image(second,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
+            image(second_place,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
         }
         else if(currentUser == rank_3_user){
             image(third,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
+        }
+        else{
+            image(ribbon,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
         }
         document.getElementById("rank_1_user").innerHTML = rank_1_user;
         document.getElementById("rank_1_perf").innerHTML = rank_1_perf;
@@ -1172,6 +1175,14 @@ function DrawVarEquals(){
     image(equals,(7*window.innerWidth)/12,window.innerHeight/4,window.innerWidth/12,window.innerHeight/4);
     image(question,(8*window.innerWidth)/12,window.innerHeight/4,window.innerWidth/12,window.innerHeight/4);
 }
+function DrawSecondaryHandImage(){
+    image(hand_fist,window.innerWidth/2,0,window.innerWidth/6,window.innerHeight/4);
+    image(equals,(4*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/4);
+    image(change,(5*window.innerWidth)/6,0,window.innerWidth/6,window.innerHeight/4);
+    image(hand_thumb,window.innerWidth/2,window.innerHeight/4,window.innerWidth/6,window.innerHeight/4);
+    image(equals,(4*window.innerWidth)/6,window.innerHeight/4,window.innerWidth/6,window.innerHeight/4);
+    image(skip,(5*window.innerWidth)/6,window.innerHeight/4,window.innerWidth/6,window.innerHeight/4);
+}
 function DeterminePastUserPerformanceIfNotDone(determinedPastPerf){
     if(determinedPastPerf == false){
         //username = document.getElementById('username').value;
@@ -1181,6 +1192,7 @@ function DeterminePastUserPerformanceIfNotDone(determinedPastPerf){
 function HandleState0(frame){
     TrainKNNIfNotDoneYet(trainingCompleted)
     DrawImageToHelpUserPutThereHandOverDevice()
+    DrawSecondaryHandImage()
     //DeterminePastUserPerformanceIfNotDone(determinedPastPerf)
 }
 function HandleState1(frame){
