@@ -579,6 +579,15 @@ function DetermineUserRankings(){
     
         rank_3_user = userRankingList[2][0];
         rank_3_perf = userRankingList[2][1];
+        if(currentUser == rank_1_user){
+            image(first,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
+        }
+        else if(currentUser == rank_2_user){
+            image(second,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
+        }
+        else if(currentUser == rank_3_user){
+            image(third,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
+        }
         document.getElementById("rank_1_user").innerHTML = rank_1_user;
         document.getElementById("rank_1_perf").innerHTML = rank_1_perf;
         document.getElementById("rank_2_user").innerHTML = rank_2_user;
@@ -586,31 +595,6 @@ function DetermineUserRankings(){
         document.getElementById("rank_3_user").innerHTML = rank_3_user;
         document.getElementById("rank_3_perf").innerHTML = rank_3_perf;
     }
-
-    
-    //console.log(userRankingList)
-
-    //username = users[1].innerHTML;
-    //console.log(String(username))
-        //userPerformance = DetermineOtherUsersPerformance(username)
-        //console.log(String(username),String(userPerformance))
-        //console.log(users[0]);
-        //console.log(users[0].innerHTML);
-    //     //if(username != users[i].innerHTML){
-         //username,userPerformace = userPref(users[i].innerHTML)
-        //userRankingList.push([username,userPerformace])
-    //     //}
-    //}
-    //console.log(userRankingList)
-    //userRankingList.sort(function(a,b){return b[1].localeCompare(a[1]);});
-    // console.log(userRankingList)
-    //console.log(mylist)
-    // for(i=1;i<users.length;i++){
-    //     username = userRankingList[i][0]
-    //     performance = userRankingList[i][1]
-    //     document.getElementById("rank_i").innerHTML = sumAcc;
-    // }
-    
 }
 function CalculateAverageDigitPerformance(listDigitAcc)
 {
