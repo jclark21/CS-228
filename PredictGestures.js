@@ -23,7 +23,7 @@ var ratio = 0;
 var testingHand = 2;
 var mathIntMode = false;
 var mathHardMode = false;
-
+var runningDigList = [];
 
 function Train()
 {
@@ -301,16 +301,19 @@ function GotResults(err,result)
     if(parseInt(result.label) == 10 && testingHand == 1){
         console.log('Secondary Hand Fist')
         if(programState == 2 && TimeToSwitchDigWithSecondary() == true){
+            timeSinceSecondaryHandDigChange = new Date();
             numPredictions = 0;
             meanPredictionAcc = 0;
             SwitchDigits()
         }
         else if(programState == 3 && TimeToSwitchDigWithSecondary() == true){
+            timeSinceSecondaryHandDigChange = new Date();
             numPredictions = 0;
             meanPredictionAcc = 0;
             firstVar,sign,secondVar,digitToShow = GenerateEquation();
         }
         else if(programState == 4 && TimeToSwitchDigWithSecondary() == true){
+            timeSinceSecondaryHandDigChange = new Date();
             numPredictions = 0;
             meanPredictionAcc = 0;
             firstVar,sign,digitToShow,answer = GenerateEquation();
@@ -589,7 +592,7 @@ function DetermineUserRankings(){
             image(third,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
         }
         else{
-            image(ribbon,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/4);
+            image(ribbon,window.innerWidth/4,window.innerHeight*0.66,window.innerWidth/4,window.innerHeight/5);
         }
         document.getElementById("rank_1_user").innerHTML = rank_1_user;
         document.getElementById("rank_1_perf").innerHTML = rank_1_perf;
@@ -749,6 +752,10 @@ function DetermineWheterToSwitchDigits(){
         timeSinceLastDigitChange = new Date()
         IncrementUserDigitAttempts(digitToShow)
         IncrementUserDigitAccuracy(digitToShow)
+        if(meanPredictionAcc>0){
+            runningDigList.push(1)
+        }
+        console.log(runningDigList)
         numPredictions = 0;
         meanPredictionAcc = 0;
         SwitchDigits()
@@ -825,7 +832,6 @@ function TimeToSwitchWithSecondary(){
         return false
     }
 }
-
 function TimeToSwitchDigWithSecondary(){
     time = new Date()
     differenceSinceChangeInMilliseconds = time - timeSinceSecondaryHandDigChange
@@ -837,7 +843,6 @@ function TimeToSwitchDigWithSecondary(){
         return false
     }
 }
-
 function TimeToSwitchDigits(){
     currentTime = new Date();
     differenceSinceChangeInMilliseconds = currentTime - timeSinceLastDigitChange
@@ -1189,6 +1194,13 @@ function DeterminePastUserPerformanceIfNotDone(determinedPastPerf){
         DeterminePastUserPerformance()
     }
 }
+function DetermineWheterToSwitchStates(){
+    console.log('Running List Length',runningDigList.length)
+    if(runningDigList.length == 9){
+        mathIntMode = true;
+        programState = 3;
+    }
+}
 function HandleState0(frame){
     TrainKNNIfNotDoneYet(trainingCompleted)
     DrawImageToHelpUserPutThereHandOverDevice()
@@ -1232,6 +1244,7 @@ function HandleState2(frame){
 
     //Put Determine State above Function Calls
     DetermineWheterToSwitchDigits();
+    DetermineWheterToSwitchStates();
     
     HandleFrame(frame,Test);
 }
@@ -1242,7 +1255,7 @@ function HandleState3(frame){
     }
     else{
         DrawEqLowerLeftPanel(firstVar,sign,secondVar);
-        DrawLowerRightPanel();
+        //DrawLowerRightPanel();
     }
     DetermineCurrentUserPerformance();
     //DisplaySessionPerformanceVisualization();
@@ -1256,11 +1269,11 @@ function HandleState4(frame){
         console.log(secondVar)
         digitToShow = parseFloat(secondVar)
         DrawVarEqUpperRightPanel(firstVar,sign,answer);
-        DrawLowerRightPanel();
+        //DrawLowerRightPanel();
     }
     else{
         DrawVarEqUpperRightPanel(firstVar,sign,answer);
-        DrawLowerRightPanel();
+        //DrawLowerRightPanel();
     }
     DetermineCurrentUserPerformance();
     //DisplaySessionPerformanceVisualization();
